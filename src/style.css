@@ -1,0 +1,170 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+  }
+  
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #222222;
+    background-image: url(https://i.pinimg.com/originals/36/87/b9/3687b954254cb69c1e0736ba2ab9ad6a.jpg);
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .tabela {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  table {
+    background-color: #222222;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ffffff;
+  }
+
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    }
+
+  .moedas button{
+    padding: 25px;
+    background-color: #222222;
+    border-radius: 7.5px;
+    border: 1px solid;
+    transition: .4s;
+  }
+
+  .moedas button:hover{
+    background-color: #000000;
+    transform: scale(105%);
+    border: 1px solid #000000;
+  }
+
+  .bebidas {
+    display: flex;
+    transition: .4s;
+  }
+
+  .bebida:hover {
+    transform: scale(105%);
+    background-color: #000000;
+  }
+
+  .bebida:hover h2{
+    background-color: #000000;
+  }
+
+  .bebida {
+    background-color: #222222;
+    width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+    transition: .4s;
+    border-radius: 15px;
+  }
+
+  .image img {
+    width: 30%;
+    height: 110px;
+    margin: 10px;
+  }
+
+  h2 {
+    padding: 10px;
+    background-color: #333;
+    transition: .4s;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  .bebidas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+  }
+
+  header > a,
+  #root > div > h1 {
+    display: inline-block;
+    background-size: cover;
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/M%C3%A1quina_de_Vendas_logo.svg/1280px-M%C3%A1quina_de_Vendas_logo.svg.png);
+    width: 279px;
+    height: 120px;
+    overflow: hidden;
+    text-indent: -9999px;
+    margin: 20px 0;
+  }
+  
+  header a {
+    color: #333;
+    font-size: 3px;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    padding-bottom: 10px;
+  }
+  
+  header {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0px 0px 0px;
+  }
+  
+  @media only screen and (max-width: 1129px) {
+    header {
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      width: 95%;
+      margin: 0 auto;
+      padding: 20px 0px 0px 0px;
+    }
+  }
+  
+  .loading-pane {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 15px;
+  }
+  
+  .loader {
+    font-size: 100px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .mini.loading-pane {
+    height: 34px;
+  }
+  
+  .mini .loader {
+    font-size: 34px;
+  }
