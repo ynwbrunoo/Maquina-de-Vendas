@@ -1,19 +1,35 @@
-import { useState } from "react";
+const Info = ({ total }) => {
 
-const Info = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [moeda, _] = useState(20);
+  const totalDinheiro = parseInt(total) < 100 ? (parseInt(total)) + " cent" : (parseInt(total) / 100) + " EUR";
 
   return (
-    <div className="coinbox">
+    <div className="info">
       <div className="title">
-        <h2>Introduza moedas:</h2>
+        <h2>Estado Actual:</h2>
       </div>
-      <div className="moedas">
-        <button>{moeda} cent</button>
+      <div className="valor">
+        <div className="tabela">
+          <table>
+            <tbody>
+              <tr>
+                <th>Valor a pagar:</th>
+                <td></td>
+              </tr>
+              <tr>
+                <th>Valor introduzido até agora:</th>
+                <td>{totalDinheiro}</td>
+              </tr>
+              <tr>
+                <th>Falta pagar:</th>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Info;
+
