@@ -1,6 +1,15 @@
-const Info = ({ total }) => {
+import { useState, useEffect } from "react";
 
-  const totalDinheiro = parseInt(total) < 100 ? (parseInt(total)) + " cent" : (parseInt(total) / 100) + " EUR";
+const Info = ({ total, selectedDrink }) => {
+  const [faltaPagar, setFaltaPagar] = useState();
+
+  useEffect(() => {
+    if (selectedDrink) {
+      setFaltaPagar(selectedDrink.price - (parseInt(total) / 100));
+    } else {
+      setFaltaPagar();
+    }
+  }, [selectedDrink, total]);
 
   return (
     <div className="info">
@@ -13,15 +22,15 @@ const Info = ({ total }) => {
             <tbody>
               <tr>
                 <th>Valor a pagar:</th>
-                <td></td>
+                <td>{selectedDrink ? `${selectedDrink.price} EUR` : ""}</td>
               </tr>
               <tr>
                 <th>Valor introduzido até agora:</th>
-                <td>{totalDinheiro}</td>
+                <td>{parseInt(total) / 100}</td>
               </tr>
               <tr>
                 <th>Falta pagar:</th>
-                <td></td>
+                <td>{faltaPagar > 0 ? `${faltaPagar} EUR` : "Pago"}</td>
               </tr>
             </tbody>
           </table>
@@ -32,4 +41,3 @@ const Info = ({ total }) => {
 };
 
 export default Info;
-

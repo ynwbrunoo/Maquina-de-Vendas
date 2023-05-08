@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 
-const CoinBox = () => {
-  const [moeda, setMoeda] = useState(20);
-  const [quantidade, setQuantidade] = useState(50);
+const CoinBox = ({ quant }) => {
+  // eslint-disable-next-line no-unused-vars
+  const [moeda, _] = useState(20);
   const [valorTotal, setValorTotal] = useState();
 
   useEffect(() => {
-    setValorTotal(moeda * quantidade / 100);
-  }, [moeda, quantidade]);
+    setValorTotal(moeda * quant / 100);
+  }, [moeda, quant]);
 
   return (
     <div className="coinbox">
@@ -23,7 +23,7 @@ const CoinBox = () => {
           </tr>
           <tr>
             <td>{moeda} cent</td>
-            <td>{quantidade}</td>
+            <td>{quant}</td>
             <td>{valorTotal} EUR</td>
           </tr>
         </table>

@@ -33,6 +33,13 @@
     border: 1px solid #ffffff;
   }
 
+  .machine {
+    background-color: #000000;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 15px;
+  }
+
   .title {
     display: flex;
     justify-content: center;
@@ -48,10 +55,11 @@
     border-radius: 7.5px;
     border: 1px solid;
     transition: .4s;
+    cursor: pointer;
   }
 
   .moedas button:hover{
-    background-color: #000000;
+    background-color: #070707;
     transform: scale(105%);
     border: 1px solid #000000;
   }
@@ -63,11 +71,6 @@
 
   .bebida:hover {
     transform: scale(105%);
-    background-color: #000000;
-  }
-
-  .bebida:hover h2{
-    background-color: #000000;
   }
 
   .bebida {
@@ -77,6 +80,7 @@
     margin-bottom: 10px;
     transition: .4s;
     border-radius: 15px;
+    cursor: pointer;
   }
 
   .image img {
@@ -87,7 +91,6 @@
 
   h2 {
     padding: 10px;
-    background-color: #333;
     transition: .4s;
   }
 
@@ -100,6 +103,10 @@
     justify-content: center;
     align-items: center;
     gap: 40px;
+  }
+
+  .valor {
+    padding-bottom: 40px;
   }
 
   header > a,
