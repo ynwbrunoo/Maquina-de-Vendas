@@ -1,7 +1,6 @@
 import coinsBox from "./coinsBox";
 
 const CoinBox = () => {
-  // eslint-disable-next-line no-unused-vars
 
   return (
     <div className="coinbox">
