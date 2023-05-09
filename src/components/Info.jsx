@@ -22,7 +22,7 @@ const Info = ({ total, selectedDrink }) => {
             <tbody>
               <tr>
                 <th>Valor a pagar:</th>
-                <td>{selectedDrink ? `${selectedDrink.price} EUR` : ""}</td>
+                <td>{selectedDrink ? `${selectedDrink.price} EUR` : "0"}</td>
               </tr>
               <tr>
                 <th>Valor introduzido até agora:</th>

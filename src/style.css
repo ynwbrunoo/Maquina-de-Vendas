@@ -53,7 +53,7 @@
     padding: 25px;
     background-color: #222222;
     border-radius: 7.5px;
-    border: 1px solid;
+    border: 1px solid #222222;
     transition: .4s;
     cursor: pointer;
   }
