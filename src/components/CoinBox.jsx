@@ -1,17 +1,11 @@
-import { useState, useEffect } from "react";
+import coinsBox from "./coinsBox";
 
-const CoinBox = ({ quant }) => {
+const CoinBox = () => {
   // eslint-disable-next-line no-unused-vars
-  const [moeda, _] = useState(20);
-  const [valorTotal, setValorTotal] = useState();
-
-  useEffect(() => {
-    setValorTotal(moeda * quant / 100);
-  }, [moeda, quant]);
 
   return (
     <div className="coinbox">
-      <div className="title">
+      <div className="title top">
         <h2>Conteúdo do Moedeiro</h2>
       </div>
       <div className="tabela">
@@ -21,11 +15,13 @@ const CoinBox = ({ quant }) => {
             <th>Quantidade</th>
             <th>Valor Total</th>
           </tr>
-          <tr>
-            <td>{moeda} cent</td>
-            <td>{quant}</td>
-            <td>{valorTotal} EUR</td>
-          </tr>
+          {coinsBox.map((coinsBox) => (
+            <tr key={coinsBox.moeda}>
+              <td>{coinsBox.moeda} cent</td>
+              <td>{coinsBox.quantidade}</td>
+              <td>{coinsBox.valorTotal} EUR</td>
+            </tr>
+          ))}
         </table>
       </div>
     </div>

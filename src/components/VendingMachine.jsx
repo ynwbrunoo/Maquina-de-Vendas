@@ -13,8 +13,8 @@ const VendingMachine = () => {
     <div className="machine">
       <CoinBox quant={quant}/>
       <Machine setSelectedDrink={setSelectedDrink}/>
-      <Coins setTotalCoins={setTotalCoins} setQuant={setQuant} />
-      <Info total={totalCoins} selectedDrink={selectedDrink}/>
+      <Coins setTotalCoins={setTotalCoins} />
+      <Info total={totalCoins} selectedDrink={selectedDrink} setSelectedDrink={setSelectedDrink} setTotalCoins={setTotalCoins} setQuant={setQuant}/>
     </div>
   );
 };

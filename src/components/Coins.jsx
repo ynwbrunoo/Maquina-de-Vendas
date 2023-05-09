@@ -1,11 +1,7 @@
-import { useState } from "react";
-
 const Coin = ({ setTotalCoins }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [moeda, _] = useState(20);
 
-  const handleCoinClick = (moeda) => {
-    setTotalCoins((prevTotalCoins) => prevTotalCoins + moeda);
+  const handleCoinClick = (value) => {
+    setTotalCoins((prevTotalCoins) => prevTotalCoins + value);
   };
 
   return (
@@ -14,7 +10,10 @@ const Coin = ({ setTotalCoins }) => {
         <h2>Introduza moedas:</h2>
       </div>
       <div className="moedas">
-      <button onClick={() => handleCoinClick(moeda)}>{moeda} cent</button>
+        <button onClick={() => handleCoinClick(5)}>{5} cent</button>
+        <button onClick={() => handleCoinClick(10)}>{10} cent</button>
+        <button onClick={() => handleCoinClick(20)}>{20} cent</button>
+        <button onClick={() => handleCoinClick(50)}>{50} cent</button>
       </div>
     </div>
   );
