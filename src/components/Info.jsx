@@ -30,7 +30,7 @@ const Info = ({ total, selectedDrink }) => {
               </tr>
               <tr>
                 <th>Falta pagar:</th>
-                <td>{faltaPagar > 0 ? `${faltaPagar} EUR` : "Pago"}</td>
+                <td>{faltaPagar > 0 ? `${Math.round(faltaPagar * 10) / 10} EUR` : "0"}</td>
               </tr>
             </tbody>
           </table>
