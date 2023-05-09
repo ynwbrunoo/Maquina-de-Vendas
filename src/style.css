@@ -58,11 +58,21 @@ td {
 }
 
 .machine {
+  display: flex;
+  flex-direction: row;
   background-color: #0f0f0f;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding: 75px;
   border-radius: 15px;
   margin: 20px;
+}
+
+.left {
+  padding-right: 75px;
+  border-right: 2px solid #222222;
+}
+
+.right {
+  padding-left: 75px;
 }
 
 .title {
@@ -78,12 +88,19 @@ td {
   padding-top: 40px;
 }
 
+.moedas {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 10px;
+  transition: 0.4s;
+}
+
 .moedas button {
-  padding: 25px;
+  width: 90px;
+  height: 60px;
   background-color: #222222;
   border-radius: 7.5px;
   border: 1px solid #222222;
-  margin-right: 10px;
   transition: 0.4s;
   cursor: pointer;
 }
@@ -94,17 +111,35 @@ td {
   border: 1px solid #000000;
 }
 
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
 .pagar button {
-  padding: 25px;
+  width: 90px;
+  height: 60px;
   background-color: #222222;
   border-radius: 7.5px;
   border: 1px solid #222222;
   transition: 0.4s;
   cursor: pointer;
-  margin-bottom: 60px;
 }
 
-.pagar button:hover {
+.devolver button {
+  width: 90px;
+  height: 60px;
+  background-color: #222222;
+  border-radius: 7.5px;
+  border: 1px solid #222222;
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.pagar button:hover, .devolver button:hover {
   background-color: #070707;
   transform: scale(105%);
   border: 1px solid #000000;

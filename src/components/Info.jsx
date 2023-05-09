@@ -13,9 +13,9 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
   }, [selectedDrink, total]);
 
   const handlePagar = () => {
-    if(selectedDrink.quant === 0) {
-      alert("Já não há mais " + selectedDrink.name + ". Espere até a máquina ser reabastecida!")
-    } else if (parseInt(total) / 100 === selectedDrink.price) {
+    if (selectedDrink.quant === 0) {
+      alert("Já não há mais " + selectedDrink.name + ". Espere até a máquina ser reabastecida!");
+    } else if (total / 100 === selectedDrink.price) {
       alert("Comprou uma " + selectedDrink.name + " com sucesso.");
       drinks.forEach((drink) => {
         if (selectedDrink && selectedDrink.name === drink.name) {
@@ -23,26 +23,33 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
             drink.quant = selectedDrink.quant - 1;
           }
         }
-      });      
+      });
       setSelectedDrink(null);
       setTotalCoins(0);
-    } else if (parseInt(total) / 100 > selectedDrink.price) {
-      alert("Comprou uma " + selectedDrink.name + " com sucesso, Tome o seu Troco de " + `${Math.round((parseInt(total) / 100 - selectedDrink.price) * 100) / 100}` + " EUR.")
+    } else if (total / 100 > selectedDrink.price) {
+      alert("Comprou uma " + selectedDrink.name + " com sucesso. Tome o seu Troco de " + `${Math.round((total / 100 - selectedDrink.price) * 100) / 100}` + " EUR!");
       drinks.forEach((drink) => {
         if (selectedDrink && selectedDrink.name === drink.name) {
           if (selectedDrink.quant !== 0) {
             drink.quant = selectedDrink.quant - 1;
           }
         }
-      });   
+      });
       setSelectedDrink(null);
       setTotalCoins(0);
-    } else if (parseInt(total) / 100 < selectedDrink.price) {
-      alert("Falta " + `${Math.round(faltaPagar * 100) / 100}` + " EUR para comprar uma " + selectedDrink.name + ".")
-    } else if ((Math.round(faltaPagar * 100) / 100) === null) {
+    } else if (total / 100 < selectedDrink.price) {
+      alert("Falta " + `${Math.round(faltaPagar * 100) / 100}` + " EUR para comprar uma " + selectedDrink.name + ".");
+    } else if (Math.round(faltaPagar * 100) / 100 === null) {
       alert("Selecione uma bebida!");
     }
   };
+
+  const handleDevolver = () => {
+    if(total / 100 !== 0) {
+      alert("Retire os seus " + total / 100 + " EUR!")
+      setTotalCoins(0);
+    }
+  }
 
   return (
     <div className="info">
@@ -59,23 +66,23 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
               </tr>
               <tr>
                 <th>Valor introduzido até agora:</th>
-                <td>{parseInt(total) / 100} EUR</td>
+                <td>{total / 100} EUR</td>
               </tr>
               <tr>
                 <th>Falta pagar:</th>
-                <td>
-                  {faltaPagar > 0
-                    ? `${Math.round(faltaPagar * 100) / 100}`
-                    : "0"}{" "}
-                  EUR
-                </td>
+                <td> {faltaPagar > 0 ? `${Math.round(faltaPagar * 100) / 100}` : "0"}{" "} EUR </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div className="pagar">
-        <button onClick={handlePagar}>Pagar</button>
+      <div className="buttons">
+        <div className="pagar">
+          <button onClick={handlePagar}>Pagar</button>
+        </div>
+        <div className="devolver">
+          <button onClick={handleDevolver}>Devolver o Dinheiro</button>
+        </div>
       </div>
     </div>
   );

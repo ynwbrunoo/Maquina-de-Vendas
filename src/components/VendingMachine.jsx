@@ -11,10 +11,20 @@ const VendingMachine = () => {
 
   return (
     <div className="machine">
-      <CoinBox quant={quant}/>
-      <Machine setSelectedDrink={setSelectedDrink}/>
-      <Coins setTotalCoins={setTotalCoins} />
-      <Info total={totalCoins} selectedDrink={selectedDrink} setSelectedDrink={setSelectedDrink} setTotalCoins={setTotalCoins} setQuant={setQuant}/>
+      <div className="left">
+        <Machine setSelectedDrink={setSelectedDrink} />
+      </div>
+      <div className="right">
+        <Coins setTotalCoins={setTotalCoins} />
+        <Info
+          total={totalCoins}
+          selectedDrink={selectedDrink}
+          setSelectedDrink={setSelectedDrink}
+          setTotalCoins={setTotalCoins}
+          setQuant={setQuant}
+        />
+        <CoinBox quant={quant} />
+      </div>
     </div>
   );
 };

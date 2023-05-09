@@ -8,7 +8,7 @@ const drinks = [
   },
   {
     name: "Sprite",
-    price: 0.8,
+    price: 1,
     quant: 5,
     image:
       "https://www.pngall.com/wp-content/uploads/2016/05/Sprite-PNG-File.png",
@@ -40,6 +40,48 @@ const drinks = [
     quant: 2,
     image:
       "https://www.pngkit.com/png/full/8-80577_mountain-dew-can-png-jpg-freeuse-download-mountain.png",
+  },
+  {
+    name: "Fanta",
+    price: 1.25,
+    quant: 5,
+    image:
+      "https://assets.stickpng.com/images/580b57fbd9996e24bc43c10f.png",
+  },
+  {
+    name: "Dr Pepper",
+    price: 1.65,
+    quant: 9,
+    image:
+      "https://www.pngkit.com/png/full/431-4314502_dr-pepper-can-png-dr-pepper-12-fl.png",
+  },
+  {
+    name: "Sumol",
+    price: 1.5,
+    quant: 10,
+    image:
+      "https://go.vendus.pt/foto/da6f5e57842c778d0d77fce4ba9b777b.png",
+  },
+  {
+    name: "Lipton",
+    price: 1.2,
+    quant: 8,
+    image:
+      "https://cdn.shopify.com/s/files/1/0573/0517/0071/products/347_a87437b7-b1b5-4dfb-894f-e451365feb9f_700x700.png?v=1677074079",
+  },
+  {
+    name: "Heineken",
+    price: 2,
+    quant: 7,
+    image:
+      "https://www.seekpng.com/png/full/115-1158617_heineken-beer-can-330ml-6-heineken-12-oz.png",
+  },
+  {
+    name: "Somersby",
+    price: 1.8,
+    quant: 8,
+    image:
+      "https://coogeebaybarrel.com.au/wp-content/uploads/2021/12/Somersby-Apple-10Pk-Can.png",
   },
 ];
 
