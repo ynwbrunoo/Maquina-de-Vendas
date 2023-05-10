@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { toast } from 'react-toastify';
 
 const Drink = ({ drink, onClick }) => {
 
@@ -8,6 +9,7 @@ const Drink = ({ drink, onClick }) => {
   const handleOnClick = (drink) => {
     onClick(drink);
     setSelectedDrink(drink.name);
+    toast(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
   };
 
   return (

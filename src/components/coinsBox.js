@@ -15,6 +15,14 @@ const coinsBox = [
     moeda: 50,
     quantidade: 14,
   },
+  {
+    moeda: 100,
+    quantidade: 9,
+  },
+  {
+    moeda: 200,
+    quantidade: 5,
+  },
 ];
 
 const calculateValue = (coin) => {

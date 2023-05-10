@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import drinks from "./drinks";
 import coinsBox from "./coinsBox";
+import { toast } from 'react-toastify';
 
 const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
   const [faltaPagar, setFaltaPagar] = useState();
@@ -36,29 +37,29 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
   }
 
   const handlePagar = () => {
-    if (selectedDrink.quant === 0) {
-      alert("Já não há mais " + selectedDrink.name + ". Espere até a máquina ser reabastecida!");
+    if (selectedDrink === null){
+      toast(`Selecione uma bebida!`, { autoClose: 3000 });
+    } else if (selectedDrink.quant === 0) {
+      toast(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`, { autoClose: 3500 });
     } else if (total / 100 === selectedDrink.price) {
-      alert("Comprou uma " + selectedDrink.name + " com sucesso.");
+      toast(`Comprou uma ${selectedDrink.name} com sucesso!`, { autoClose: 3000 });
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
     } else if (total / 100 > selectedDrink.price) {
-      alert("Comprou uma " + selectedDrink.name + " com sucesso. Tome o seu Troco de " + `${Math.round((total / 100 - selectedDrink.price) * 100) / 100}` + " EUR!");
+      toast(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`, { autoClose: 4000 });
       troco();
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
     } else if (total / 100 < selectedDrink.price) {
-      alert("Falta " + `${Math.round(faltaPagar * 100) / 100}` + " EUR para comprar uma " + selectedDrink.name + ".");
-    } else if (Math.round(faltaPagar * 100) / 100 === null) {
-      alert("Selecione uma bebida!");
+      toast(`Falta ${Math.round(faltaPagar * 100) / 100} EUR para comprar uma ${selectedDrink.name}!`, { autoClose: 4000 });
     }
   };
 
   const handleDevolver = () => {
     if(total / 100 !== 0) {
-      alert("Retire os seus " + total / 100 + " EUR!")
+      toast(`Retire o(s) seu(s) ${total / 100} EUR!`, { autoClose: 3000 });
       setTotalCoins(0);
     }
   }
@@ -66,7 +67,7 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
   return (
     <div className="info">
       <div className="title">
-        <h2>Estado Actual:</h2>
+        <h2>Estado Actual</h2>
       </div>
       <div className="valor">
         <div className="tabela">
@@ -77,7 +78,7 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
                 <td>{selectedDrink ? `${selectedDrink.price}` : "0"} EUR</td>
               </tr>
               <tr>
-                <th>Valor introduzido até agora:</th>
+                <th>Valor introduzido:</th>
                 <td>{total / 100} EUR</td>
               </tr>
               <tr>

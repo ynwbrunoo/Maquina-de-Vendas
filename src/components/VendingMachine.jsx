@@ -3,6 +3,8 @@ import { useState } from "react";
 import Coins from "./Coins";
 import Info from "./Info";
 import Machine from "./Machine";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const VendingMachine = () => {
   const [totalCoins, setTotalCoins] = useState(0);
@@ -15,6 +17,7 @@ const VendingMachine = () => {
         <Machine setSelectedDrink={setSelectedDrink} />
       </div>
       <div className="right">
+        <ToastContainer />
         <Coins setTotalCoins={setTotalCoins} setCoinsInserted={setCoinsInserted} />
         <Info
           total={totalCoins}
