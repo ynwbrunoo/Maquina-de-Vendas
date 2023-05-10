@@ -69,32 +69,34 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
       <div className="title">
         <h2>Estado Actual</h2>
       </div>
-      <div className="valor">
-        <div className="tabela">
-          <table>
-            <tbody>
-              <tr>
-                <th>Valor a pagar:</th>
-                <td>{selectedDrink ? `${selectedDrink.price}` : "0"} EUR</td>
-              </tr>
-              <tr>
-                <th>Valor introduzido:</th>
-                <td>{total / 100} EUR</td>
-              </tr>
-              <tr>
-                <th>Falta pagar:</th>
-                <td> {faltaPagar > 0 ? `${Math.round(faltaPagar * 100) / 100}` : "0"}{" "} EUR </td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="tabbtn">
+        <div className="valor">
+          <div className="tabela">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Valor a pagar:</th>
+                  <td>{selectedDrink ? `${selectedDrink.price}` : "0"} EUR</td>
+                </tr>
+                <tr>
+                  <th>Valor introduzido:</th>
+                  <td>{total / 100} EUR</td>
+                </tr>
+                <tr>
+                  <th>Falta pagar:</th>
+                  <td> {faltaPagar > 0 ? `${Math.round(faltaPagar * 100) / 100}` : "0"}{" "} EUR </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div className="buttons">
-        <div className="pagar">
-          <button onClick={handlePagar}>Pagar</button>
-        </div>
-        <div className="devolver">
-          <button onClick={handleDevolver}>Devolver o Dinheiro</button>
+        <div className="buttons">
+          <div className="pagar">
+            <button onClick={handlePagar}>Pagar</button>
+          </div>
+          <div className="devolver">
+            <button onClick={handleDevolver}>Devolver o Dinheiro</button>
+          </div>
         </div>
       </div>
     </div>

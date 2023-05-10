@@ -39,6 +39,13 @@ body {
   margin: 0;
 }
 
+.coinbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .tabela {
   display: flex;
   justify-content: center;
@@ -49,6 +56,7 @@ body {
 table {
   background-color: #222222;
   border-collapse: collapse;
+  font-size: 15px;
 }
 
 th,
@@ -96,7 +104,7 @@ td {
 .moedas {
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 10px;
+  gap: 15px;
   transition: 0.4s;
 }
 
@@ -118,10 +126,10 @@ td {
 
 .buttons {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
 }
 
 .pagar button {
@@ -207,8 +215,12 @@ p {
   margin-bottom: 10px;
 }
 
-.valor {
-  padding-bottom: 40px;
+.tabbtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }
 
 header > a,
