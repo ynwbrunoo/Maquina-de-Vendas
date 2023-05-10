@@ -1,7 +1,7 @@
 import drinks from "./drinks";
 import Drink from "./Drink";
 
-const Machine = ({setSelectedDrink}) => {
+const Machine = ({setSelectedDrink, selectedDrink}) => {
   const handleDrinkClick = (drink) => {
     setSelectedDrink(drink);
   };
@@ -9,7 +9,7 @@ const Machine = ({setSelectedDrink}) => {
   return (
       <div className="bebidas">
         {drinks.map((drink) => (
-          <Drink key={drink.name} drink={drink} onClick={handleDrinkClick}/>
+          <Drink key={drink.name} drink={drink} onClick={handleDrinkClick} selectedDrink={selectedDrink} />
         ))}
       </div>
   );

@@ -1,6 +1,6 @@
 const drinks = [
   {
-    name: "Coca-Cola",
+    name: "Coca Cola",
     price: 1.2,
     quant: 10,
     image:
@@ -14,14 +14,14 @@ const drinks = [
       "https://www.pngall.com/wp-content/uploads/2016/05/Sprite-PNG-File.png",
   },
   {
-    name: "Monster",
+    name: "Monster E",
     price: 1.8,
     quant: 4,
     image:
       "https://web-assests.monsterenergy.com/mnst/7b0389eb-d398-45f6-9b93-d92570979a7e.png",
   },
   {
-    name: "Monster",
+    name: "Monster M",
     price: 1.8,
     quant: 6,
     image:

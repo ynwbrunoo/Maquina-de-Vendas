@@ -5,7 +5,6 @@ import Info from "./Info";
 import Machine from "./Machine";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Log from "./Log";
 
 const VendingMachine = () => {
   const [totalCoins, setTotalCoins] = useState(0);
@@ -15,7 +14,7 @@ const VendingMachine = () => {
   return (
     <div className="machine">
       <div className="left">
-        <Machine setSelectedDrink={setSelectedDrink} />
+        <Machine setSelectedDrink={setSelectedDrink} selectedDrink={selectedDrink} />
       </div>
       <div className="right">
         <ToastContainer />
@@ -28,7 +27,6 @@ const VendingMachine = () => {
           coinList={coinList}
         />
         <CoinBox/>
-        <Log />
       </div>
     </div>
   );
