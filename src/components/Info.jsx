@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import drinks from "./drinks";
+import coinsBox from "./coinsBox";
 
 const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
   const [faltaPagar, setFaltaPagar] = useState();
@@ -12,29 +13,40 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
     }
   }, [selectedDrink, total]);
 
+  const retirarQuant = () => {
+    drinks.forEach((drink) => {
+      if (selectedDrink && selectedDrink.name === drink.name) {
+        if (selectedDrink.quant !== 0) {
+          drink.quant = selectedDrink.quant - 1;
+        }
+      }
+    });
+  }
+
+  const troco = () => {
+    coinsBox.forEach((coin, index) => {
+      if (Math.round(((total / 100) - selectedDrink.price) * 100) / 100 >= (coinsBox[index].moeda / 100)) {
+        if(coin.moeda === coinsBox[index].moeda) {
+          coinsBox[index].quantidade = coin.quantidade - 1;
+          coinsBox[index].valorTotal = coin.moeda * coin.quantidade / 100;
+          total = total - coinsBox[index].moeda;
+        }
+      }
+    });
+  }
+
   const handlePagar = () => {
     if (selectedDrink.quant === 0) {
       alert("Já não há mais " + selectedDrink.name + ". Espere até a máquina ser reabastecida!");
     } else if (total / 100 === selectedDrink.price) {
       alert("Comprou uma " + selectedDrink.name + " com sucesso.");
-      drinks.forEach((drink) => {
-        if (selectedDrink && selectedDrink.name === drink.name) {
-          if (selectedDrink.quant !== 0) {
-            drink.quant = selectedDrink.quant - 1;
-          }
-        }
-      });
+      retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
     } else if (total / 100 > selectedDrink.price) {
       alert("Comprou uma " + selectedDrink.name + " com sucesso. Tome o seu Troco de " + `${Math.round((total / 100 - selectedDrink.price) * 100) / 100}` + " EUR!");
-      drinks.forEach((drink) => {
-        if (selectedDrink && selectedDrink.name === drink.name) {
-          if (selectedDrink.quant !== 0) {
-            drink.quant = selectedDrink.quant - 1;
-          }
-        }
-      });
+      troco();
+      retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
     } else if (total / 100 < selectedDrink.price) {

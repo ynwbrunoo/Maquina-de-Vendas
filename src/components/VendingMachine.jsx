@@ -6,8 +6,8 @@ import Machine from "./Machine";
 
 const VendingMachine = () => {
   const [totalCoins, setTotalCoins] = useState(0);
-  const [quant, setQuant] = useState(50);
   const [selectedDrink, setSelectedDrink] = useState(null);
+  const [coinsInserted, setCoinsInserted] = useState({});
 
   return (
     <div className="machine">
@@ -15,15 +15,14 @@ const VendingMachine = () => {
         <Machine setSelectedDrink={setSelectedDrink} />
       </div>
       <div className="right">
-        <Coins setTotalCoins={setTotalCoins} />
+        <Coins setTotalCoins={setTotalCoins} setCoinsInserted={setCoinsInserted} />
         <Info
           total={totalCoins}
           selectedDrink={selectedDrink}
           setSelectedDrink={setSelectedDrink}
           setTotalCoins={setTotalCoins}
-          setQuant={setQuant}
         />
-        <CoinBox quant={quant} />
+        <CoinBox coinsInserted={coinsInserted} />
       </div>
     </div>
   );
