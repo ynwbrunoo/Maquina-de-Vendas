@@ -3,7 +3,7 @@ import drinks from "./drinks";
 import coinsBox from "./coinsBox";
 import { toast } from 'react-toastify';
 
-const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
+const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList }) => {
   const [faltaPagar, setFaltaPagar] = useState();
 
   useEffect(() => {
@@ -29,11 +29,25 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
       if (Math.round(((total / 100) - selectedDrink.price) * 100) / 100 >= (coinsBox[index].moeda / 100)) {
         if(coin.moeda === coinsBox[index].moeda) {
           coinsBox[index].quantidade = coin.quantidade - 1;
-          coinsBox[index].valorTotal = coin.moeda * coin.quantidade / 100;
+          coinsBox[index].valorTotal = (coin.moeda * coin.quantidade) / 100;
           total = total - coinsBox[index].moeda;
         }
       }
     });
+  }
+
+  const addMoney = () => {
+    coinList.forEach((coin1, index1) => {
+      coinsBox.forEach((coin2, index2) => {
+        if(coinList[index1] === coinsBox[index2].moeda) {
+          coinsBox[index2].quantidade = coin2.quantidade + 1;
+          coinsBox[index2].valorTotal = (coin2.moeda * coin2.quantidade) / 100;
+        }
+      });
+    });
+    for (let i = 0; i < coinList.length; i++) {
+      coinList[i].quantidade = 0;
+    }
   }
 
   const handlePagar = () => {
@@ -46,12 +60,14 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
+      addMoney();
     } else if (total / 100 > selectedDrink.price) {
       toast(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`, { autoClose: 4000 });
       troco();
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
+      addMoney();
     } else if (total / 100 < selectedDrink.price) {
       toast(`Falta ${Math.round(faltaPagar * 100) / 100} EUR para comprar uma ${selectedDrink.name}!`, { autoClose: 4000 });
     }
@@ -84,7 +100,7 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins }) => {
                 </tr>
                 <tr>
                   <th>Falta pagar:</th>
-                  <td> {faltaPagar > 0 ? `${Math.round(faltaPagar * 100) / 100}` : "0"}{" "} EUR </td>
+                  <td> {faltaPagar > 0 ? `${Math.round(faltaPagar * 100) / 100}` : "0"} EUR </td>
                 </tr>
               </tbody>
             </table>

@@ -34,9 +34,6 @@ const CoinBox = () => {
           })}
         </table>
       </div>
-      <div className="log">
-        <button><img src="https://www.seekpng.com/png/full/781-7815113_history-icon-white-png.png" alt="Histórico" /> Histórico</button>
-      </div>
     </div>
   );
 };

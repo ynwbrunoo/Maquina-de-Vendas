@@ -1,9 +1,11 @@
 import { toast } from 'react-toastify';
 
-const Coin = ({ setTotalCoins }) => {
+const Coin = ({ setTotalCoins, setCoinList }) => {
 
   const handleCoinClick = (value) => {
     setTotalCoins((prevTotalCoins) => prevTotalCoins + value);
+    setCoinList((prevCoinList) => [...prevCoinList, value]);
+
     if(value < 100){
       toast(`Introduziu a moeda de ${value} cent!`, { autoClose: 1500 });
     } else {
