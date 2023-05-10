@@ -57,6 +57,10 @@ td {
   border: 1px solid #ffffff;
 }
 
+.valor .tabela td {
+  width: 90px;
+}
+
 .machine {
   display: flex;
   flex-direction: row;
