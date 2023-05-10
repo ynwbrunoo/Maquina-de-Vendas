@@ -158,6 +158,12 @@ td {
   border: 1px solid #000000;
 }
 
+.log button:hover {
+  background-color: #070707;
+  transform: scale(101%);
+  border: 1px solid #000000;
+}
+
 .bebida.coca-cola-selected {
   background-color: #000000;
 }
@@ -221,6 +227,35 @@ p {
   align-items: center;
   justify-content: center;
   gap: 15px;
+}
+
+.log {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.log button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 40px;
+  width: 100%;
+  padding-top: 7.5px;
+  padding-bottom: 7.5px;
+  background-color: #222222;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .4s;
+}
+
+.log button img {
+  width: 40px;
 }
 
 header > a,
