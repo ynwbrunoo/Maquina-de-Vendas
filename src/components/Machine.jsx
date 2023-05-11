@@ -14,6 +14,13 @@ const Machine = ({setSelectedDrink, selectedDrink}) => {
   const handleDrinkClick = (drink) => {
     setSelectedDrink(drink);
     logAndStore(`Selecionou a bebida ${drink.name} - ${getCurrentTime()}`);
+    setTimeout(() => {
+      drinks.forEach((d) => {
+        document.getElementById(d.name).style.backgroundColor = "#222222";
+        document.getElementById(d.name).removeAttribute('data-selected');
+        setSelectedDrink(null);
+      });
+    }, 15000);
   };
 
   return (

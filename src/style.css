@@ -124,14 +124,6 @@ td {
   border: 1px solid #000000;
 }
 
-.buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-}
-
 #modal {
   background-color: rgba(0, 0, 0, 0.9);
   position: fixed;
@@ -254,6 +246,12 @@ p {
   gap: 15px;
 }
 
+.tabbtn .buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .log {
   display: flex;
   justify-content: center;
@@ -304,6 +302,16 @@ p {
   cursor: pointer;
 }
 
+#modal .buttons {
+  height: auto;
+}
+
+.historico {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
 .historico .lista ul li {
   list-style: none;
   padding: 30px;
@@ -313,7 +321,6 @@ p {
 
 .lista {
   overflow-y: scroll;
-  height: 800px;
   padding: 0px 30px 0px 30px;
 }
 
