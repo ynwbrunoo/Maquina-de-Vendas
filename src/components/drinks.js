@@ -46,7 +46,7 @@ const drinks = [
     price: 1.25,
     quant: 5,
     image:
-      "https://assets.stickpng.com/images/580b57fbd9996e24bc43c10f.png",
+      "https://www.nicepng.com/png/full/69-691752_fanta-orange-drink-warehouse-uk.png",
   },
   {
     name: "Dr Pepper",
