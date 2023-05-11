@@ -1,6 +1,15 @@
 import { toast } from 'react-toastify';
+import { logAndStore } from './log';
 
-const Coin = ({ setTotalCoins, setCoinList }) => {
+const Coin = ({ setTotalCoins, setCoinList}) => {
+
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
+    return `${hours}:${minutes} ${date.toLocaleDateString('pt-BR', options)}`;
+  }; 
 
   const handleCoinClick = (value) => {
     setTotalCoins((prevTotalCoins) => prevTotalCoins + value);
@@ -8,10 +17,10 @@ const Coin = ({ setTotalCoins, setCoinList }) => {
 
     if(value < 100){
       toast.info(`Introduziu a moeda de ${value} cent!`, { autoClose: 1500 });
-      console.log(`Introduziu a moeda de ${value} cent!`);
+      logAndStore(`Introduziu uma moeda de ${value} cent - ${getCurrentTime()}`);
     } else {
       toast.info(`Introduziu a moeda de ${value / 100} EUR!`, { autoClose: 1500 });
-      console.log(`Introduziu a moeda de ${value / 100} EUR!`);
+      logAndStore(`Introduziu uma moeda de ${value / 100} EUR - ${getCurrentTime()}`);
     }
   };
 

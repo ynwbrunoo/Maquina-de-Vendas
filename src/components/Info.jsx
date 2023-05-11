@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import drinks from "./drinks";
 import coinsBox from "./coinsBox";
 import { toast } from 'react-toastify';
+import { logAndStore } from './log';
 
 const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList }) => {
   const [faltaPagar, setFaltaPagar] = useState();
@@ -50,23 +51,32 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList 
     }
   }
 
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
+    return `${hours}:${minutes} ${date.toLocaleDateString('pt-BR', options)}`;
+  }; 
+  
+
   const handlePagar = () => {
     if (selectedDrink === null){
       toast.error(`Selecione uma bebida!`, { autoClose: 3000 });
       console.log(`Selecione uma bebida!`);
     } else if (selectedDrink.quant === 0) {
+      logAndStore(`Já não há mais ${selectedDrink.name} - ${getCurrentTime()}`);
       toast.error(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`, { autoClose: 3500 });
-      console.log(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`);
     } else if (total / 100 === selectedDrink.price) {
+      logAndStore(`Comprou uma ${selectedDrink.name} (${selectedDrink.price} EUR) - ${getCurrentTime()}`);
       toast.success(`Comprou uma ${selectedDrink.name} com sucesso!`, { autoClose: 3000 });
-      console.log(`Comprou uma ${selectedDrink.name} com sucesso!`);
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
       addMoney();
     } else if (total / 100 > selectedDrink.price) {
+      logAndStore(`Comprou uma ${selectedDrink.name} (${selectedDrink.price} EUR) com ${total / 100} EUR e recebeu troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR! - ${getCurrentTime()}`);
       toast.success(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`, { autoClose: 4000 });
-      console.log(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`);
       troco();
       retirarQuant();
       setSelectedDrink(null);
@@ -80,8 +90,8 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList 
 
   const handleDevolver = () => {
     if(total / 100 !== 0) {
+      logAndStore(`Retirou os seus ${selectedDrink.name} (${selectedDrink.price} EUR) - ${getCurrentTime()}`);
       toast.info(`Retire o(s) seu(s) ${total / 100} EUR!`, { autoClose: 3000 });
-      console.log(`Retire o(s) seu(s) ${total / 100} EUR!`);
       setTotalCoins(0);
     }
   }

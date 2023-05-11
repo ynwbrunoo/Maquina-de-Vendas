@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import drinks from "./drinks";
 
+
 const Drink = ({ drink, onClick, selectedDrink }) => {
 
   // eslint-disable-next-line no-unused-vars
@@ -12,7 +13,6 @@ const Drink = ({ drink, onClick, selectedDrink }) => {
     onClick(drink);
     setSelectedDrink(drink.name);
     toast.info(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
-    console.log(`Selecionou a bebida ${drink.name}!`);
 
     document.getElementById(drink.name).style.backgroundColor = "#000000";
     drinks.forEach((d) => {
