@@ -6,14 +6,19 @@ const Log = () => {
   const [logMessages, setLogMessages] = useState([]);
 
   const getLogMessages = () => {
-    const storedLogMessages = JSON.parse(localStorage.getItem("logMessages")) || [];
+    const storedLogMessages =
+      JSON.parse(localStorage.getItem("logMessages")) || [];
     setLogMessages(storedLogMessages);
   };
 
   return (
     <div className="history">
       <div className="log">
-        <button onClick={() => {setShowModal(true), getLogMessages()}}>
+        <button
+          onClick={() => {
+            setShowModal(true), getLogMessages();
+          }}
+        >
           <img
             src="https://www.seekpng.com/png/full/781-7815113_history-icon-white-png.png"
             alt="Histórico"
@@ -22,14 +27,14 @@ const Log = () => {
         </button>
         {showModal ? (
           <Modal>
-            <div>
-              <div className="buttons">
-                <button onClick={() => setShowModal(false)}>Close</button>
-              </div>
-              <div>
-                <h2>Histórico:</h2>
+            <div className="buttons">
+              <button onClick={() => setShowModal(false)}>Close</button>
+            </div>
+            <div className="historico">
+              <h2>Histórico:</h2>
+              <div className="lista">
                 <ul>
-                {logMessages.map((message, index) => (
+                  {logMessages.reverse().map((message, index) => (
                     <li key={index}>{message}</li>
                   ))}
                 </ul>

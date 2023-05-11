@@ -90,7 +90,7 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList 
 
   const handleDevolver = () => {
     if(total / 100 !== 0) {
-      logAndStore(`Retirou os seus ${selectedDrink.name} (${selectedDrink.price} EUR) - ${getCurrentTime()}`);
+      logAndStore(`Retirou o(s) seu(s) ${total / 100} EUR - ${getCurrentTime()}`);
       toast.info(`Retire o(s) seu(s) ${total / 100} EUR!`, { autoClose: 3000 });
       setTotalCoins(0);
     }
