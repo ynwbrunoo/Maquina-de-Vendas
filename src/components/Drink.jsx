@@ -11,7 +11,7 @@ const Drink = ({ drink, onClick, selectedDrink }) => {
   const handleOnClick = (drink) => {
     onClick(drink);
     setSelectedDrink(drink.name);
-    toast(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
+    toast.info(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
     console.log(`Selecionou a bebida ${drink.name}!`);
 
     document.getElementById(drink.name).style.backgroundColor = "#000000";

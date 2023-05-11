@@ -7,10 +7,10 @@ const Coin = ({ setTotalCoins, setCoinList }) => {
     setCoinList((prevCoinList) => [...prevCoinList, value]);
 
     if(value < 100){
-      toast(`Introduziu a moeda de ${value} cent!`, { autoClose: 1500 });
+      toast.info(`Introduziu a moeda de ${value} cent!`, { autoClose: 1500 });
       console.log(`Introduziu a moeda de ${value} cent!`);
     } else {
-      toast(`Introduziu a moeda de ${value / 100} EUR!`, { autoClose: 1500 });
+      toast.info(`Introduziu a moeda de ${value / 100} EUR!`, { autoClose: 1500 });
       console.log(`Introduziu a moeda de ${value / 100} EUR!`);
     }
   };

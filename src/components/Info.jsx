@@ -52,20 +52,20 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList 
 
   const handlePagar = () => {
     if (selectedDrink === null){
-      toast(`Selecione uma bebida!`, { autoClose: 3000 });
+      toast.error(`Selecione uma bebida!`, { autoClose: 3000 });
       console.log(`Selecione uma bebida!`);
     } else if (selectedDrink.quant === 0) {
-      toast(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`, { autoClose: 3500 });
+      toast.error(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`, { autoClose: 3500 });
       console.log(`Já não há mais ${selectedDrink.name}. Espere até a máquina ser reabastecida!`);
     } else if (total / 100 === selectedDrink.price) {
-      toast(`Comprou uma ${selectedDrink.name} com sucesso!`, { autoClose: 3000 });
+      toast.success(`Comprou uma ${selectedDrink.name} com sucesso!`, { autoClose: 3000 });
       console.log(`Comprou uma ${selectedDrink.name} com sucesso!`);
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
       addMoney();
     } else if (total / 100 > selectedDrink.price) {
-      toast(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`, { autoClose: 4000 });
+      toast.success(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`, { autoClose: 4000 });
       console.log(`Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${Math.round((total / 100 - selectedDrink.price) * 100) / 100} EUR!`);
       troco();
       retirarQuant();
@@ -73,14 +73,14 @@ const Info = ({ total, selectedDrink, setSelectedDrink, setTotalCoins, coinList 
       setTotalCoins(0);
       addMoney();
     } else if (total / 100 < selectedDrink.price) {
-      toast(`Falta ${Math.round(faltaPagar * 100) / 100} EUR para comprar uma ${selectedDrink.name}!`, { autoClose: 4000 });
+      toast.warn(`Falta ${Math.round(faltaPagar * 100) / 100} EUR para comprar uma ${selectedDrink.name}!`, { autoClose: 4000 });
       console.log(`Falta ${Math.round(faltaPagar * 100) / 100} EUR para comprar uma ${selectedDrink.name}!`);
     }
   };
 
   const handleDevolver = () => {
     if(total / 100 !== 0) {
-      toast(`Retire o(s) seu(s) ${total / 100} EUR!`, { autoClose: 3000 });
+      toast.info(`Retire o(s) seu(s) ${total / 100} EUR!`, { autoClose: 3000 });
       console.log(`Retire o(s) seu(s) ${total / 100} EUR!`);
       setTotalCoins(0);
     }
