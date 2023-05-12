@@ -151,6 +151,7 @@ td {
 
 #modal .buttons button {
   display: inline-block;
+  transition: .4s;
 }
 
 .pagar button {
@@ -173,7 +174,7 @@ td {
   cursor: pointer;
 }
 
-.pagar button:hover, .devolver button:hover {
+.pagar button:hover, .devolver button:hover, #modal .buttons button:hover {
   background-color: #070707;
   transform: scale(105%);
   border: 1px solid #000000;
