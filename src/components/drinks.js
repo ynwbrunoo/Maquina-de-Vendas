@@ -21,7 +21,7 @@ const drinks = [
       "https://web-assests.monsterenergy.com/mnst/7b0389eb-d398-45f6-9b93-d92570979a7e.png",
   },
   {
-    name: "Monster M",
+    name: "Monster J",
     price: 1.8,
     quant: 6,
     image:
