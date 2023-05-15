@@ -1,4 +1,4 @@
-const coinsBox = [
+let defaultCoins = [
   {
     moeda: 200,
     quantidade: 5,
@@ -25,15 +25,4 @@ const coinsBox = [
   },
 ];
 
-const calculateValue = (coin) => {
-  return coin.moeda * coin.quantidade / 100;
-}
-
-const coinsBoxWithValues = coinsBox.map((coin) => {
-  return {
-    ...coin,
-    valorTotal: calculateValue(coin)
-  }
-});
-
-export default coinsBoxWithValues;
+export default defaultCoins;
