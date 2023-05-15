@@ -39,6 +39,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
         document.getElementById(d.name).removeAttribute("data-selected");
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDrink]);
 
   const handleDrinkClick = (drink) => {

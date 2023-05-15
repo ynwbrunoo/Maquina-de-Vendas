@@ -25,6 +25,7 @@ const Drink = ({ drink, onClick, totalCoins }) => {
         document.getElementById(d.name).style.cursor = "not-allowed";
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCoins]);
 
   const handleOnClick = (drink) => {
