@@ -1,27 +1,53 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import drinks from "./drinks";
 
 
-const Drink = ({ drink, onClick }) => {
+const Drink = ({ drink, onClick, totalCoins }) => {
 
-  // eslint-disable-next-line no-unused-vars
-  const [_, setSelectedDrink] = useState(null);
+  useEffect(() => {
+    drinks.forEach((d) => {
+      if((totalCoins / 100) >= d.price) {
+        document.getElementById(d.name).style.backgroundColor = "#222222";
+        document.getElementById(d.name).style.cursor = "pointer";
+      } else {
+        document.getElementById(d.name).style.backgroundColor = "#757575";
+        document.getElementById(d.name).style.cursor = "not-allowed";
+      }
+    });
+  }, [totalCoins]);
 
   const handleOnClick = (drink) => {
     if (document.getElementById(drink.name).getAttribute('data-selected') === 'true') {
+      return;
+    }
+
+    if((totalCoins / 100) < drink.price) {
+      toast.error(`Insira o dinheiro primeiro para comprar uma ${drink.name} (${drink.price} EUR)!`, { autoClose: 2000 });
+      document.getElementById(drink.name).style.backgroundColor = "#757575";
+      document.getElementById(drink.name).removeAttribute('data-selected');
       return;
     }
   
     onClick(drink);
   
     toast.info(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
+
+    if((totalCoins / 100) < drink.price) {
+      document.getElementById(drink.name).style.backgroundColor = "#757575";
+    } else {
+      document.getElementById(drink.name).style.backgroundColor = "#000000";
+    }
   
-    document.getElementById(drink.name).style.backgroundColor = "#000000";
+    
     drinks.forEach((d) => {
       if (d.name !== drink.name) {
-        document.getElementById(d.name).style.backgroundColor = "#222222";
+        if((totalCoins / 100) < d.price) { 
+          document.getElementById(d.name).style.backgroundColor = "#757575";
+        } else {
+          document.getElementById(d.name).style.backgroundColor = "#222222";
+        }
         document.getElementById(d.name).removeAttribute('data-selected');
       }
     });

@@ -18,6 +18,7 @@ const VendingMachine = () => {
         <Machine
           setSelectedDrink={setSelectedDrink}
           selectedDrink={selectedDrink}
+          totalCoins={totalCoins}
         />
       </div>
       <div className="right">

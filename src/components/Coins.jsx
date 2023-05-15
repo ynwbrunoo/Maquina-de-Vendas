@@ -5,10 +5,14 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
 
   const getCurrentTime = () => {
     const date = new Date();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
-    return `${hours}:${minutes} ${date.toLocaleDateString('pt-BR', options)}`;
+    const options = {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+    return `${date.toLocaleDateString('pt-PT', options)}`;
   }; 
 
   const handleCoinClick = (value) => {

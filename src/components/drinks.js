@@ -42,7 +42,7 @@ const drinks = [
       "https://www.pngkit.com/png/full/8-80577_mountain-dew-can-png-jpg-freeuse-download-mountain.png",
   },
   {
-    name: "Fanta",
+    name: "Fanta O",
     price: 1.25,
     quant: 5,
     image:
@@ -56,14 +56,14 @@ const drinks = [
       "https://www.pngkit.com/png/full/431-4314502_dr-pepper-can-png-dr-pepper-12-fl.png",
   },
   {
-    name: "Sumol",
+    name: "Sumol L",
     price: 1.5,
     quant: 10,
     image:
       "https://go.vendus.pt/foto/da6f5e57842c778d0d77fce4ba9b777b.png",
   },
   {
-    name: "Lipton",
+    name: "Lipton P",
     price: 1.2,
     quant: 8,
     image:
@@ -77,7 +77,7 @@ const drinks = [
       "https://www.seekpng.com/png/full/115-1158617_heineken-beer-can-330ml-6-heineken-12-oz.png",
   },
   {
-    name: "Somersby",
+    name: "Somersby A",
     price: 1.8,
     quant: 8,
     image:

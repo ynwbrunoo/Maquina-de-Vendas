@@ -208,13 +208,12 @@ td {
 }
 
 .bebida {
-  background-color: #222222;
   width: 200px;
   height: auto;
   margin-bottom: 10px;
   transition: 0.4s;
   border-radius: 15px;
-  cursor: pointer;
+  cursor: not-allowed;
 }
 
 .image {
