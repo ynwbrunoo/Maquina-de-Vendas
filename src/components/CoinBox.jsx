@@ -1,13 +1,13 @@
 import defaultCoins from "./defaultCoins";
 
 const CoinBox = () => {
-  // verificar se o objeto de moedas existe no localStorage
+  // Verifica se o objeto de moedas existe no localStorage
   const storedCoins = localStorage.getItem("coinsBox");
 
-  // se o objeto de moedas existir, use-o. Se não, use o objeto de moedas padrão.
+  // Se o objeto de moedas existir, usa-o. Se não, usa o objeto de moedas default.
   const coinsBox = storedCoins ? JSON.parse(storedCoins) : defaultCoins;
 
-  // armazenar o objeto de moedas no localStorage se ele não existir
+  // Armazena o objeto de moedas no localStorage se ele não existir
   if (!storedCoins) {
     localStorage.setItem("coinsBox", JSON.stringify(defaultCoins));
   }

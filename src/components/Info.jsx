@@ -3,6 +3,7 @@ import defaultDrinks from "./defaultDrinks";
 import defaultCoins from "./defaultCoins";
 import { toast } from "react-toastify";
 import { logAndStore } from "./log";
+import { StoreAnalytics } from "./analytics";
 
 const Info = ({
   total,
@@ -65,6 +66,25 @@ const Info = ({
     });
   };
 
+  const analytics = (drink, price) => {
+    const now = new Date();
+    const hour = now.getHours();
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+
+    StoreAnalytics([
+      {
+        drink: drink,
+        price: price,
+        day: day,
+        month: month,
+        year: year,
+        hour: hour,
+      },
+    ])
+  }
+
   const addMoney = () => {
     coinList.forEach((coin1, index1) => {
       coinsBox.forEach((coin2, index2) => {
@@ -111,6 +131,7 @@ const Info = ({
       toast.success(`Comprou uma ${selectedDrink.name} com sucesso!`, {
         autoClose: 3000,
       });
+      analytics(selectedDrink.name, selectedDrink.price);
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
@@ -129,6 +150,7 @@ const Info = ({
         } EUR!`,
         { autoClose: 4000 }
       );
+      analytics(selectedDrink.name, selectedDrink.price);
       troco();
       retirarQuant();
       setSelectedDrink(null);
