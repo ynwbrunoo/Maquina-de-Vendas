@@ -1,7 +1,7 @@
 export function StoreAnalytics(message) {
-    let storedAnalyticMessages = JSON.parse(localStorage.getItem('analyticMessages')) || [];
+    let storedDadosMessages = JSON.parse(localStorage.getItem('dadosMessages')) || [];
   
-    storedAnalyticMessages.push(message);
+    storedDadosMessages.push(...message);
   
-    localStorage.setItem('analyticMessages', JSON.stringify(storedAnalyticMessages));
+    localStorage.setItem('dadosMessages', JSON.stringify(storedDadosMessages));
 }

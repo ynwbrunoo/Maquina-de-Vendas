@@ -42,11 +42,14 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDrink]);
 
+  let timeoutId;
+
   const handleDrinkClick = (drink) => {
+    clearTimeout(timeoutId);
     setSelectedDrink(drink);
     logAndStore(`Selecionou a bebida ${drink.name} - ${getCurrentTime()}`);
 
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       drinks.forEach((d) => {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
@@ -54,8 +57,8 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
           document.getElementById(d.name).style.backgroundColor = "#222222";
         }
         document.getElementById(d.name).removeAttribute("data-selected");
-        setSelectedDrink(null);
       });
+      setSelectedDrink(null);
     }, 15000);
   };
 

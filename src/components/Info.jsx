@@ -66,24 +66,51 @@ const Info = ({
     });
   };
 
-  const analytics = (drink, price) => {
+  const storedDadosMessages = localStorage.getItem("dadosMessages");
+
+  const dadosMessages = storedDadosMessages
+    ? JSON.parse(storedDadosMessages)
+    : null;
+
+  const updateDadosInLocalStorage = () => {
+    localStorage.setItem("dadosMessages", JSON.stringify(dadosMessages));
+  };
+
+  const analytics = (price) => {
     const now = new Date();
-    const hour = now.getHours();
     const day = now.getDate();
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
 
-    StoreAnalytics([
-      {
-        drink: drink,
-        price: price,
-        day: day,
-        month: month,
-        year: year,
-        hour: hour,
-      },
-    ])
-  }
+    if (dadosMessages !== null) {
+      dadosMessages.forEach((dado) => {
+        if (dado.day === now.getDate()) {
+          dado.price += selectedDrink.price;
+          updateDadosInLocalStorage();
+          return;
+        } else {
+          StoreAnalytics([
+            {
+              day: day,
+              price: price,
+              month: month,
+              year: year,
+            },
+          ]);
+          return;
+        }
+      });
+    } else {
+      StoreAnalytics([
+        {
+          day: day,
+          price: price,
+          month: month,
+          year: year,
+        },
+      ]);
+    }
+  };
 
   const addMoney = () => {
     coinList.forEach((coin1, index1) => {
@@ -131,7 +158,7 @@ const Info = ({
       toast.success(`Comprou uma ${selectedDrink.name} com sucesso!`, {
         autoClose: 3000,
       });
-      analytics(selectedDrink.name, selectedDrink.price);
+      analytics(selectedDrink.price);
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
@@ -140,17 +167,20 @@ const Info = ({
       logAndStore(
         `Comprou uma ${selectedDrink.name} (${selectedDrink.price} EUR) com ${
           total / 100
-        } EUR e recebeu troco de ${
-          (total / 100 - selectedDrink.price).toFixed(2)
-        } EUR! - ${getCurrentTime()}`
+        } EUR e recebeu troco de ${(total / 100 - selectedDrink.price).toFixed(
+          2
+        )} EUR! - ${getCurrentTime()}`
       );
       toast.success(
-        `Comprou uma ${selectedDrink.name} com sucesso! Retire o seu Troco de ${
-          (total / 100 - selectedDrink.price).toFixed(2)
-        } EUR!`,
+        `Comprou uma ${
+          selectedDrink.name
+        } com sucesso! Retire o seu Troco de ${(
+          total / 100 -
+          selectedDrink.price
+        ).toFixed(2)} EUR!`,
         { autoClose: 4000 }
       );
-      analytics(selectedDrink.name, selectedDrink.price);
+      analytics(selectedDrink.price);
       troco();
       retirarQuant();
       setSelectedDrink(null);
@@ -174,9 +204,13 @@ const Info = ({
   const handleDevolver = () => {
     if (total / 100 !== 0) {
       logAndStore(
-        `Retirou o(s) seu(s) ${(total / 100).toFixed(2)} EUR - ${getCurrentTime()}`
+        `Retirou o(s) seu(s) ${(total / 100).toFixed(
+          2
+        )} EUR - ${getCurrentTime()}`
       );
-      toast.info(`Retire o(s) seu(s) ${(total / 100).toFixed(2)} EUR!`, { autoClose: 3000 });
+      toast.info(`Retire o(s) seu(s) ${(total / 100).toFixed(2)} EUR!`, {
+        autoClose: 3000,
+      });
       setTotalCoins(0);
       setSelectedDrink(null);
     }
@@ -194,11 +228,16 @@ const Info = ({
               <tbody>
                 <tr>
                   <th>Valor a pagar:</th>
-                  <td>{selectedDrink ? `${(selectedDrink.price).toFixed(2)}` : "0"} EUR</td>
+                  <td>
+                    {selectedDrink ? `${selectedDrink.price.toFixed(2)}` : "0"}{" "}
+                    EUR
+                  </td>
                 </tr>
                 <tr>
                   <th>Valor introduzido:</th>
-                  <td>{total / 100 > 0 ? `${(total / 100).toFixed(2)}` : "0"} EUR</td>
+                  <td>
+                    {total / 100 > 0 ? `${(total / 100).toFixed(2)}` : "0"} EUR
+                  </td>
                 </tr>
                 <tr>
                   <th>Falta pagar:</th>

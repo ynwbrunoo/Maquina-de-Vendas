@@ -28,7 +28,7 @@ const Log = () => {
         {showModal ? (
           <Modal>
             <div className="buttons">
-              <button onClick={() => setShowModal(false)}>Close</button>
+              <button onClick={() => setShowModal(false)}>Fechar</button>
             </div>
             <div className="historico">
               <h2>Histórico:</h2>

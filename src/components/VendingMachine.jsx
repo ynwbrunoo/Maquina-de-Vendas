@@ -6,6 +6,7 @@ import Machine from "./Machine";
 import Log from "./Log.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Analytics from "./Analytics.jsx";
 
 const VendingMachine = () => {
   const [totalCoins, setTotalCoins] = useState(0);
@@ -36,6 +37,7 @@ const VendingMachine = () => {
         />
         <CoinBox />
         <Log />
+        <Analytics />
       </div>
     </div>
   );
