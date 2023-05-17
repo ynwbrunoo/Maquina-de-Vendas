@@ -16,7 +16,7 @@ const Analytics = () => {
           "#ffffff",
         ],
         borderColor: "white",
-        borderWidth: 2,
+        borderWidth: 3,
       },
     ],
   });

@@ -85,7 +85,7 @@ const Info = ({
     if (dadosMessages !== null) {
       dadosMessages.forEach((dado) => {
         if (dado.day === now.getDate()) {
-          dado.price += selectedDrink.price;
+          dado.price = dado.price + selectedDrink.price;
           updateDadosInLocalStorage();
           return;
         } else {
