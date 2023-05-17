@@ -8,6 +8,7 @@ const Analytics = () => {
   // eslint-disable-next-line no-unused-vars
   const [dadosMessages, setDadosMessages] = useState([]);
   const [chartDataByMonth, setChartDataByMonth] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [chartDadosMessages, setChartDadosMessages] = useState({
     labels: [],
     datasets: [
@@ -70,7 +71,7 @@ const Analytics = () => {
           pointBorderColor: "white",
           borderColor: "white",
           borderWidth: 2,
-          fill: true,
+          fill: true
         },
       ],
     };
