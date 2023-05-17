@@ -332,6 +332,11 @@ p {
   padding: 0px 30px 0px 30px;
 }
 
+.lista h3 {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
 .historico ul li span{
   font-weight: bold;
 }
