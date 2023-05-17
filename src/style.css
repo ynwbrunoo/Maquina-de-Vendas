@@ -252,6 +252,14 @@ p {
   gap: 15px;
 }
 
+.logbtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 25px;
+}
+
 .log {
   display: flex;
   justify-content: center;
@@ -268,8 +276,8 @@ p {
   font-weight: bold;
   margin-top: 40px;
   width: 100%;
-  padding-top: 7.5px;
-  padding-bottom: 7.5px;
+  height: 60px;
+  padding: 10px;
   background-color: #222222;
   border: none;
   border-radius: 10px;

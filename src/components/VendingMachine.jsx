@@ -36,8 +36,10 @@ const VendingMachine = () => {
           coinList={coinList}
         />
         <CoinBox />
-        <Log />
-        <Analytics />
+        <div className="logbtns">
+          <Log />
+          <Analytics />
+        </div>
       </div>
     </div>
   );

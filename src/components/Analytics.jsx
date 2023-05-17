@@ -55,7 +55,7 @@ const Analytics = () => {
           }}
         >
           <img
-            src="https://www.seekpng.com/png/full/781-7815113_history-icon-white-png.png"
+            src="https://flaticons.net/icon.php?slug_category=user-interface&slug_icon=data-analysis"
             alt="Análise"
           />{" "}
           Análise
