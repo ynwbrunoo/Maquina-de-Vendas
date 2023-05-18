@@ -3,7 +3,8 @@ import defaultDrinks from "./defaultDrinks";
 import defaultCoins from "./defaultCoins";
 import { toast } from "react-toastify";
 import { logAndStore } from "./log";
-import { StoreAnalytics } from "./analytics";
+import { StoreMesAnalytics } from "./analyticsMes";
+import { StoreAnoAnalytics } from "./analyticsAno";
 
 const Info = ({
   total,
@@ -66,14 +67,24 @@ const Info = ({
     });
   };
 
-  const storedDadosMessages = localStorage.getItem("dadosMessages");
+  const storedDadosMesMessages = localStorage.getItem("dadosMesMessages");
 
-  const dadosMessages = storedDadosMessages
-    ? JSON.parse(storedDadosMessages)
+  const dadosMesMessages = storedDadosMesMessages
+    ? JSON.parse(storedDadosMesMessages)
     : null;
 
-  const updateDadosInLocalStorage = () => {
-    localStorage.setItem("dadosMessages", JSON.stringify(dadosMessages));
+  const updateDadosMesInLocalStorage = () => {
+    localStorage.setItem("dadosMesMessages", JSON.stringify(dadosMesMessages));
+  };
+
+  const storedDadosAnoMessages = localStorage.getItem("dadosAnoMessages");
+
+  const dadosAnoMessages = storedDadosAnoMessages
+    ? JSON.parse(storedDadosAnoMessages)
+    : null;
+
+  const updateDadosAnoInLocalStorage = () => {
+    localStorage.setItem("dadosAnoMessages", JSON.stringify(dadosAnoMessages));
   };
 
   const analytics = (price) => {
@@ -82,14 +93,14 @@ const Info = ({
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
 
-    if (dadosMessages !== null) {
-      dadosMessages.forEach((dado) => {
-        if (dado.day === now.getDate()) {
-          dado.price = dado.price + selectedDrink.price;
-          updateDadosInLocalStorage();
+    if (dadosMesMessages !== null) {
+      dadosMesMessages.forEach((dadoMes) => {
+        if (dadoMes.day === now.getDate()) {
+          dadoMes.price = dadoMes.price + selectedDrink.price;
+          updateDadosMesInLocalStorage();
           return;
         } else {
-          StoreAnalytics([
+          StoreMesAnalytics([
             {
               day: day,
               price: price,
@@ -101,9 +112,36 @@ const Info = ({
         }
       });
     } else {
-      StoreAnalytics([
+      StoreMesAnalytics([
         {
           day: day,
+          price: price,
+          month: month,
+          year: year,
+        },
+      ]);
+    }
+
+    if (dadosAnoMessages !== null) {
+      dadosAnoMessages.forEach((dadoAno) => {
+        if (dadoAno.year === year) {
+          dadoAno.price = dadoAno.price + selectedDrink.price;
+          updateDadosAnoInLocalStorage();
+          return;
+        } else {
+          StoreAnoAnalytics([
+            {
+              price: price,
+              month: month,
+              year: year,
+            },
+          ]);
+          return;
+        }
+      });
+    } else {
+      StoreAnoAnalytics([
+        {
           price: price,
           month: month,
           year: year,

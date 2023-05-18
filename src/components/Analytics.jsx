@@ -8,21 +8,12 @@ import _ from "lodash";
 const Analytics = () => {
   const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
-  const [dadosMessages, setDadosMessages] = useState([]);
-  const [chartDataBySomethin, setChartDataBySomethin] = useState({});
+  const [dadosMesMessages, setDadosMesMessages] = useState([]);
   // eslint-disable-next-line no-unused-vars
-  const [chartDadosMessages, setChartDadosMessages] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: "Dinheiro Ganho",
-        data: [],
-        backgroundColor: ["#ffffff"],
-        borderColor: "white",
-        borderWidth: 3,
-      },
-    ],
-  });
+  const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
+  const [chartDataByYear, setChartDataByYear] = useState({});
+  const [chartDataByMonth, setChartDataByMonth] = useState({});
+
 
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -35,14 +26,14 @@ const Analytics = () => {
     return capitalize(monthName);
   };
 
-  const getSomethinChartData = () => {
-    const storedDadosMessages =
-      JSON.parse(localStorage.getItem("dadosMessages")) || [];
-      setDadosMessages(storedDadosMessages);
+  const getYearChartData = () => {
+    const storedDadosAnoMessages =
+      JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
+      setDadosAnoMessages(storedDadosAnoMessages);
+      
+      const groupedData = _.groupBy(storedDadosAnoMessages, "year");
 
-      const groupedData = _.groupBy(storedDadosMessages, "year");
-
-      const chartDataBySomethin = {};
+      const chartDataByYear = {};
 
       // Itere sobre os grupos de dados e crie o formato esperado pelo gráfico para cada mês
       for (const year in groupedData) {
@@ -61,43 +52,76 @@ const Analytics = () => {
             },
           ],
         };
-        chartDataBySomethin[year] = chartData;
+        chartDataByYear[year] = chartData;
       }
 
-    return chartDataBySomethin;
+    return chartDataByYear;
   };
 
-  const storedDadosMessages =
-    JSON.parse(localStorage.getItem("dadosMessages")) || [];
+  const getMonthChartData = () => {
+    const storedDadosMesMessages =
+      JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
+      setDadosMesMessages(storedDadosMesMessages);
+
+      const groupedData = _.groupBy(storedDadosMesMessages, "month");
+
+      const chartDataByMonth = {};
+
+      // Itere sobre os grupos de dados e crie o formato esperado pelo gráfico para cada mês
+      for (const month in groupedData) {
+        const monthData = groupedData[month];
+        const chartData = {
+          labels: monthData.map((data) => data.day),
+          datasets: [
+            {
+              label: "Dinheiro Ganho",
+              data: monthData.map((data) => data.price),
+              backgroundColor: ["#ffffff"],
+              pointBackgroundColor: "black",
+              pointBorderColor: "white",
+              borderColor: "white",
+              borderWidth: 2,
+            },
+          ],
+        };
+        chartDataByMonth[month] = chartData;
+      }
+
+    return chartDataByMonth;
+  };
+
+  const storedDadosMesMessages =
+    JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
 
   const handleModalOpen = () => {
     setShowModal(true);
   };
 
   const renderedDate = new Set();
-  const sortedDadosMessages = storedDadosMessages.sort((a, b) => a.day - b.day);
+  const sortedDadosMesMessages = storedDadosMesMessages.sort((a, b) => a.day - b.day);
   
-
   const handleAnosValue = () => {
     if(document.getElementById("anos").value !== "") {
-      const somethinChartData = getSomethinChartData();
-      setChartDataBySomethin(somethinChartData);
+      const yearChartData = getYearChartData();
+      setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
-      document.getElementById("dias").disabled = false;
-      document.getElementById("dias").value = "";
+      
     } else {
       document.getElementById("meses").disabled = true;
       document.getElementById("dias").disabled = true;
+      document.getElementById("dias").value = "";
     }
   }
 
   const handleMesesValue = () => {
     if(document.getElementById("meses").value !== "") {
+      const monthChartData = getMonthChartData();
+      setChartDataByMonth(monthChartData);
       document.getElementById("dias").disabled = false;
-      document.getElementById("dias").value = "";
     } else {
       document.getElementById("dias").disabled = true;
+      document.getElementById("dias").value = "";
     }
   }
 
@@ -129,7 +153,7 @@ const Analytics = () => {
                   <h2>Filtrar</h2>
                   <select name="anos" id="anos" onChange={() => handleAnosValue()}>
                     <option value="">Selecione o Ano</option>
-                    {storedDadosMessages.map((data) => {
+                    {storedDadosMesMessages.map((data) => {
                       if (!renderedDate.has(data.year)) {
                         renderedDate.add(data.year);
                         return (
@@ -144,7 +168,7 @@ const Analytics = () => {
 
                   <select name="meses" id="meses" disabled onChange={() => handleMesesValue()}>
                     <option value="">Selecione o Mês</option>
-                    {storedDadosMessages.map((data) => {
+                    {storedDadosMesMessages.map((data) => {
                       if (!renderedDate.has(data.month)) {
                         renderedDate.add(data.month);
                         return (
@@ -159,7 +183,7 @@ const Analytics = () => {
 
                   <select name="dias" id="dias" disabled>
                     <option value="">Selecione o Dia</option>
-                    {sortedDadosMessages.map((data) => {
+                    {sortedDadosMesMessages.map((data) => {
                       if (!renderedDate.has(data.day)) {
                         renderedDate.add(data.day);
                         return (
@@ -173,14 +197,27 @@ const Analytics = () => {
                   </select>
                 </div>
                 <div className="lista graficos">
-                  {Object.entries(chartDataBySomethin).map(
-                    ([year, chartData]) => (
-                      <div key={year} style={{ width: 700 }}>
-                        <h3>{`${year}`}</h3>
-                        <LineChart chartDadosMessages={chartData} />
-                      </div>
-                    )
-                  )}
+                {
+                  (() => {
+                    if (document.getElementById("dias") && document.getElementById("dias").value !== "") {
+                      return <div>Olá</div>;
+                    } else if (document.getElementById("meses") && document.getElementById("meses").value !== "") {
+                      return Object.entries(chartDataByMonth).map(([month, chartData]) => (
+                        <div key={month} style={{ width: 700 }}>
+                          <h3>{`${month}`}</h3>
+                          <LineChart chartDadosMessages={chartData} />
+                        </div>
+                      ));
+                    } else if (document.getElementById("anos") && document.getElementById("anos").value !== "") {
+                      return Object.entries(chartDataByYear).map(([year, chartData]) => (
+                        <div key={year} style={{ width: 700 }}>
+                          <h3>{`${year}`}</h3>
+                          <LineChart chartDadosMessages={chartData} />
+                        </div>
+                      ));
+                    }
+                  })()
+                }
                 </div>
               </div>
             </div>
