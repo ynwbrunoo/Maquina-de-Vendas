@@ -9,7 +9,7 @@ const Analytics = () => {
   const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [dadosMessages, setDadosMessages] = useState([]);
-  const [chartDataByMonth, setChartDataByMonth] = useState({});
+  const [chartDataBySomethin, setChartDataBySomethin] = useState({});
   // eslint-disable-next-line no-unused-vars
   const [chartDadosMessages, setChartDadosMessages] = useState({
     labels: [],
@@ -35,74 +35,53 @@ const Analytics = () => {
     return capitalize(monthName);
   };
 
-  const getMonthlyChartData = () => {
+  const getSomethinChartData = () => {
     const storedDadosMessages =
       JSON.parse(localStorage.getItem("dadosMessages")) || [];
+      setDadosMessages(storedDadosMessages);
 
-    // Agrupe os dados por mês usando o lodash
-    const groupedData = _.groupBy(storedDadosMessages, "month");
+      const groupedData = _.groupBy(storedDadosMessages, "year");
 
-    // Crie um objeto vazio para armazenar os dados do gráfico por mês
-    const chartDataByMonth = {};
+      const chartDataBySomethin = {};
 
-    // Itere sobre os grupos de dados e crie o formato esperado pelo gráfico para cada mês
-    for (const month in groupedData) {
-      const monthData = groupedData[month];
-      const chartData = {
-        labels: monthData.map((data) => data.day),
-        datasets: [
-          {
-            label: "Dinheiro Ganho",
-            data: monthData.map((data) => data.price),
-            backgroundColor: ["#ffffff"],
-            pointBackgroundColor: "black",
-            pointBorderColor: "white",
-            borderColor: "white",
-            borderWidth: 2,
-          },
-        ],
-      };
-      chartDataByMonth[month] = chartData;
-    }
+      // Itere sobre os grupos de dados e crie o formato esperado pelo gráfico para cada mês
+      for (const year in groupedData) {
+        const yearData = groupedData[year];
+        const chartData = {
+          labels: yearData.map((data) => data.month),
+          datasets: [
+            {
+              label: "Dinheiro Ganho",
+              data: yearData.map((data) => data.price),
+              backgroundColor: ["#ffffff"],
+              pointBackgroundColor: "black",
+              pointBorderColor: "white",
+              borderColor: "white",
+              borderWidth: 2,
+            },
+          ],
+        };
+        chartDataBySomethin[year] = chartData;
+      }
 
-    return chartDataByMonth;
+    return chartDataBySomethin;
   };
 
   const storedDadosMessages =
     JSON.parse(localStorage.getItem("dadosMessages")) || [];
 
-  const getLogMessages = () => {
-    setDadosMessages(storedDadosMessages);
-
-    const chartData = {
-      labels: storedDadosMessages.map((data) => data.day),
-      datasets: [
-        {
-          label: "Dinheiro Ganho",
-          data: storedDadosMessages.map((data) => data.price),
-          backgroundColor: "#ffffff",
-          pointBackgroundColor: "black",
-          pointBorderColor: "white",
-          borderColor: "white",
-          borderWidth: 2,
-          fill: true,
-        },
-      ],
-    };
-    setChartDadosMessages(chartData);
-  };
-
   const handleModalOpen = () => {
     setShowModal(true);
-    const monthlyChartData = getMonthlyChartData();
-    setChartDataByMonth(monthlyChartData);
   };
 
   const renderedDate = new Set();
   const sortedDadosMessages = storedDadosMessages.sort((a, b) => a.day - b.day);
+  
 
   const handleAnosValue = () => {
     if(document.getElementById("anos").value !== "") {
+      const somethinChartData = getSomethinChartData();
+      setChartDataBySomethin(somethinChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
       document.getElementById("dias").disabled = false;
@@ -128,7 +107,6 @@ const Analytics = () => {
         <button
           onClick={() => {
             handleModalOpen();
-            getLogMessages();
           }}
         >
           <img
@@ -195,10 +173,10 @@ const Analytics = () => {
                   </select>
                 </div>
                 <div className="lista graficos">
-                  {Object.entries(chartDataByMonth).map(
-                    ([month, chartData]) => (
-                      <div key={month} style={{ width: 700 }}>
-                        <h3>{`${getMonthName(month)}`}</h3>
+                  {Object.entries(chartDataBySomethin).map(
+                    ([year, chartData]) => (
+                      <div key={year} style={{ width: 700 }}>
+                        <h3>{`${year}`}</h3>
                         <LineChart chartDadosMessages={chartData} />
                       </div>
                     )
