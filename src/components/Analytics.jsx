@@ -67,7 +67,7 @@ const Analytics = () => {
       const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
 
       const chartDataByMonthAndYear = {};
-
+    
     for (const year in groupedDataByMonthAndYear) {
         const yearData = groupedDataByMonthAndYear[year];
         chartDataByMonthAndYear[year] = {};
@@ -174,7 +174,7 @@ const Analytics = () => {
 
                   <select name="meses" id="meses" disabled onChange={() => handleMesesValue()}>
                     <option value="">Selecione o Mês</option>
-                    {storedDadosMesMessages.map((data) => {
+                    {dadosAnoMessages.map((data) => {
                       if (!renderedDate.has(data.month)) {
                         renderedDate.add(data.month);
                         return (
