@@ -7,17 +7,16 @@ import _ from "lodash";
 
 const Analytics = () => {
   const [showModal, setShowModal] = useState(false);
+  const storedDadosDiaMessages =
+    JSON.parse(localStorage.getItem("dadosDiaMessages")) || [];
   const storedDadosMesMessages =
     JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
 
   const storedDadosAnoMessages =
     JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
-  // eslint-disable-next-line no-unused-vars
-  const [dadosMesMessages, setDadosMesMessages] = useState(storedDadosMesMessages);
-  // eslint-disable-next-line no-unused-vars
-  const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
   const [chartDataByYear, setChartDataByYear] = useState({});
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
+  const [chartDataByDayAndMonthAndYear, setChartDataByDayAndMonthAndYear] = useState({});
 
 
   const capitalize = (str) => {
@@ -59,15 +58,12 @@ const Analytics = () => {
         chartDataByYear[year] = chartData;
       }
 
-    storedDadosAnoMessages = storedDadosAnoMessages[document.getElementById("anos").value];
-    setDadosAnoMessages(storedDadosAnoMessages);
     return chartDataByYear;
   };
 
   const getMonthChartData = () => {
     const storedDadosMesMessages =
       JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
-      setDadosMesMessages(storedDadosMesMessages);
 
       const groupedDataByYear = _.groupBy(storedDadosMesMessages, "year");
       const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
@@ -100,13 +96,53 @@ const Analytics = () => {
     return chartDataByMonthAndYear;
   };
 
+  const getDayChartData = () => {
+    const storedDadosDiaMessages =
+      JSON.parse(localStorage.getItem("dadosDiaMessages")) || [];
+
+      const groupedDataByYear = _.groupBy(storedDadosDiaMessages, "year");
+      const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
+      const groupedDataByDayAndMonthAndYear = _.mapValues(groupedDataByMonthAndYear, monthData => _.groupBy(monthData, "day"));
+
+      const chartDataByDayAndMonthAndYear = {};
+    
+    for (const year in groupedDataByMonthAndYear) {
+        chartDataByMonthAndYear[year] = {};
+        for (const month in groupedDataByDayAndMonthAndYear) {
+          const monthData = groupedDataByDayAndMonthAndYear[month];
+          chartDataByDayAndMonthAndYear[month] = {};
+          for (const day in monthData) {
+            const dayData = monthData[day];
+            const chartData = {
+                labels: dayData.map((data) => data.hours),
+                datasets: [
+                    {
+                        label: "Dinheiro Ganho",
+                        data: dayData.map((data) => data.price),
+                        backgroundColor: ["#ffffff"],
+                        pointBackgroundColor: "black",
+                        pointBorderColor: "white",
+                        borderColor: "white",
+                        borderWidth: 2,
+                    },
+                ],
+            };
+            chartDataByDayAndMonthAndYear[year][month][day] = chartData;
+          }
+        }
+    }
+
+    return chartDataByDayAndMonthAndYear;
+  };
+
 
   const handleModalOpen = () => {
     setShowModal(true);
   };
 
   const renderedDate = new Set();
-  const sortedDadosMesMessages = storedDadosMesMessages.sort((a, b) => a.day - b.day);
+  const sortedDadosDiaMessages = storedDadosDiaMessages.sort((a, b) => a.day - b.day);
+  const sortedDadosMesMessages = storedDadosMesMessages.sort((a, b) => a.month - b.month);
   
   const handleAnosValue = () => {
     if(document.getElementById("anos").value !== "") {
@@ -114,7 +150,6 @@ const Analytics = () => {
       setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
-      setDadosMesMessages(storedDadosMesMessages[document.getElementById("anos").value])
     } else {
       document.getElementById("meses").disabled = true;
       document.getElementById("dias").disabled = true;
@@ -130,6 +165,13 @@ const Analytics = () => {
     } else {
       document.getElementById("dias").disabled = true;
       document.getElementById("dias").value = "";
+    }
+  }
+
+  const handleDiasValue = () => {
+    if(document.getElementById("dias").value !== "") {
+      const dayChartData = getDayChartData();
+      setChartDataByDayAndMonthAndYear(dayChartData);
     }
   }
 
@@ -176,7 +218,7 @@ const Analytics = () => {
 
                   <select name="meses" id="meses" disabled onChange={() => handleMesesValue()}>
                     <option value="">Selecione o Mês</option>
-                    {storedDadosMesMessages.map((data) => {
+                    {sortedDadosMesMessages.map((data) => {
                       if (!renderedDate.has(data.month)) {
                         renderedDate.add(data.month);
                         return (
@@ -189,9 +231,9 @@ const Analytics = () => {
                     })}
                   </select>
 
-                  <select name="dias" id="dias" disabled>
+                  <select name="dias" id="dias" disabled onChange={() => handleDiasValue()}>
                     <option value="">Selecione o Dia</option>
-                    {sortedDadosMesMessages.map((data) => {
+                    {sortedDadosDiaMessages.map((data) => {
                       if (!renderedDate.has(data.day)) {
                         renderedDate.add(data.day);
                         return (
@@ -208,7 +250,20 @@ const Analytics = () => {
                 {
                   (() => {
                     if (document.getElementById("dias") && document.getElementById("dias").value !== "") {
-                      return <div>Olá</div>;
+                      const selectedDay = document.getElementById("dias").value;
+                      const selectedMonth = document.getElementById("meses").value;
+                      const selectedYear = document.getElementById("anos").value;
+
+                      const filteredChartData = chartDataByDayAndMonthAndYear[selectedYear][selectedMonth][selectedDay];
+
+                      return (
+                          <>
+                              <div style={{ width: 700 }}>
+                                  <h3>{`Dia ${selectedDay}`}</h3>
+                                  <LineChart chartDadosMessages={filteredChartData} />
+                              </div>
+                          </>
+                      );
                     } else if (document.getElementById("meses") && document.getElementById("meses").value !== "") {
                       const selectedMonth = document.getElementById("meses").value;
                       const selectedYear = document.getElementById("anos").value;
