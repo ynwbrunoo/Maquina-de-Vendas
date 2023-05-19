@@ -7,8 +7,13 @@ import _ from "lodash";
 
 const Analytics = () => {
   const [showModal, setShowModal] = useState(false);
+  const storedDadosMesMessages =
+    JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
+
+  const storedDadosAnoMessages =
+    JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
   // eslint-disable-next-line no-unused-vars
-  const [dadosMesMessages, setDadosMesMessages] = useState([]);
+  const [dadosMesMessages, setDadosMesMessages] = useState(storedDadosMesMessages);
   // eslint-disable-next-line no-unused-vars
   const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
   const [chartDataByYear, setChartDataByYear] = useState({});
@@ -27,9 +32,8 @@ const Analytics = () => {
   };
 
   const getYearChartData = () => {
-    const storedDadosAnoMessages =
+    let storedDadosAnoMessages =
       JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
-      setDadosAnoMessages(storedDadosAnoMessages);
       
       const groupedData = _.groupBy(storedDadosAnoMessages, "year");
 
@@ -55,6 +59,8 @@ const Analytics = () => {
         chartDataByYear[year] = chartData;
       }
 
+    storedDadosAnoMessages = storedDadosAnoMessages[document.getElementById("anos").value];
+    setDadosAnoMessages(storedDadosAnoMessages);
     return chartDataByYear;
   };
 
@@ -94,11 +100,6 @@ const Analytics = () => {
     return chartDataByMonthAndYear;
   };
 
-  const storedDadosMesMessages =
-    JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
-
-  const storedDadosAnoMessages =
-    JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
 
   const handleModalOpen = () => {
     setShowModal(true);
@@ -113,6 +114,7 @@ const Analytics = () => {
       setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
+      setDadosMesMessages(storedDadosMesMessages[document.getElementById("anos").value])
     } else {
       document.getElementById("meses").disabled = true;
       document.getElementById("dias").disabled = true;
@@ -174,7 +176,7 @@ const Analytics = () => {
 
                   <select name="meses" id="meses" disabled onChange={() => handleMesesValue()}>
                     <option value="">Selecione o Mês</option>
-                    {dadosAnoMessages.map((data) => {
+                    {storedDadosMesMessages.map((data) => {
                       if (!renderedDate.has(data.month)) {
                         renderedDate.add(data.month);
                         return (
@@ -202,7 +204,7 @@ const Analytics = () => {
                     })}
                   </select>
                 </div>
-                <div className="lista graficos">
+                <div className="graficos">
                 {
                   (() => {
                     if (document.getElementById("dias") && document.getElementById("dias").value !== "") {

@@ -135,6 +135,7 @@ td {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: .4s;
 }
 
 #modal:empty {
@@ -144,9 +145,10 @@ td {
 #modal > div {
   background-color: #0f0f0f;
   max-width: 100%;
-  height: 90%;
+  height: 95%;
   padding: 45px;
   border-radius: 30px;
+  transition: .4s;
 }
 
 #modal .buttons button {
@@ -314,12 +316,6 @@ p {
   height: auto;
 }
 
-.historico {
-  display: flex;
-  justify-content: start;
-  align-items: start;
-}
-
 .atividade {
   display: flex !important;
   flex-direction: row !important;
@@ -332,6 +328,7 @@ p {
 
 .graficos {
   height: 85% !important;
+  padding: 0px 30px 0px 30px;
 }
 
 .historico .lista ul li {
