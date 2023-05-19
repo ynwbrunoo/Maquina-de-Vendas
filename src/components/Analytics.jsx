@@ -12,7 +12,7 @@ const Analytics = () => {
   // eslint-disable-next-line no-unused-vars
   const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
   const [chartDataByYear, setChartDataByYear] = useState({});
-  const [chartDataByMonth, setChartDataByMonth] = useState({});
+  const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
 
 
   const capitalize = (str) => {
@@ -63,35 +63,42 @@ const Analytics = () => {
       JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
       setDadosMesMessages(storedDadosMesMessages);
 
-      const groupedData = _.groupBy(storedDadosMesMessages, "month");
+      const groupedDataByYear = _.groupBy(storedDadosMesMessages, "year");
+      const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
 
-      const chartDataByMonth = {};
+      const chartDataByMonthAndYear = {};
 
-      // Itere sobre os grupos de dados e crie o formato esperado pelo gráfico para cada mês
-      for (const month in groupedData) {
-        const monthData = groupedData[month];
-        const chartData = {
-          labels: monthData.map((data) => data.day),
-          datasets: [
-            {
-              label: "Dinheiro Ganho",
-              data: monthData.map((data) => data.price),
-              backgroundColor: ["#ffffff"],
-              pointBackgroundColor: "black",
-              pointBorderColor: "white",
-              borderColor: "white",
-              borderWidth: 2,
-            },
-          ],
-        };
-        chartDataByMonth[month] = chartData;
-      }
+    for (const year in groupedDataByMonthAndYear) {
+        const yearData = groupedDataByMonthAndYear[year];
+        chartDataByMonthAndYear[year] = {};
+        for (const month in yearData) {
+            const monthData = yearData[month];
+            const chartData = {
+                labels: monthData.map((data) => data.day),
+                datasets: [
+                    {
+                        label: "Dinheiro Ganho",
+                        data: monthData.map((data) => data.price),
+                        backgroundColor: ["#ffffff"],
+                        pointBackgroundColor: "black",
+                        pointBorderColor: "white",
+                        borderColor: "white",
+                        borderWidth: 2,
+                    },
+                ],
+            };
+            chartDataByMonthAndYear[year][month] = chartData;
+        }
+    }
 
-    return chartDataByMonth;
+    return chartDataByMonthAndYear;
   };
 
   const storedDadosMesMessages =
     JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
+
+  const storedDadosAnoMessages =
+    JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
 
   const handleModalOpen = () => {
     setShowModal(true);
@@ -106,7 +113,6 @@ const Analytics = () => {
       setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
-      
     } else {
       document.getElementById("meses").disabled = true;
       document.getElementById("dias").disabled = true;
@@ -117,7 +123,7 @@ const Analytics = () => {
   const handleMesesValue = () => {
     if(document.getElementById("meses").value !== "") {
       const monthChartData = getMonthChartData();
-      setChartDataByMonth(monthChartData);
+      setChartDataByMonthAndYear(monthChartData);
       document.getElementById("dias").disabled = false;
     } else {
       document.getElementById("dias").disabled = true;
@@ -153,7 +159,7 @@ const Analytics = () => {
                   <h2>Filtrar</h2>
                   <select name="anos" id="anos" onChange={() => handleAnosValue()}>
                     <option value="">Selecione o Ano</option>
-                    {storedDadosMesMessages.map((data) => {
+                    {storedDadosAnoMessages.map((data) => {
                       if (!renderedDate.has(data.year)) {
                         renderedDate.add(data.year);
                         return (
@@ -202,19 +208,32 @@ const Analytics = () => {
                     if (document.getElementById("dias") && document.getElementById("dias").value !== "") {
                       return <div>Olá</div>;
                     } else if (document.getElementById("meses") && document.getElementById("meses").value !== "") {
-                      return Object.entries(chartDataByMonth).map(([month, chartData]) => (
-                        <div key={month} style={{ width: 700 }}>
-                          <h3>{`${month}`}</h3>
-                          <LineChart chartDadosMessages={chartData} />
-                        </div>
-                      ));
+                      const selectedMonth = document.getElementById("meses").value;
+                      const selectedYear = document.getElementById("anos").value;
+
+                      const filteredChartData = chartDataByMonthAndYear[selectedYear][selectedMonth];
+
+                      return (
+                          <>
+                              <div style={{ width: 700 }}>
+                                  <h3>{`${getMonthName(selectedMonth)}`}</h3>
+                                  <LineChart chartDadosMessages={filteredChartData} />
+                              </div>
+                          </>
+                      );
                     } else if (document.getElementById("anos") && document.getElementById("anos").value !== "") {
-                      return Object.entries(chartDataByYear).map(([year, chartData]) => (
-                        <div key={year} style={{ width: 700 }}>
-                          <h3>{`${year}`}</h3>
-                          <LineChart chartDadosMessages={chartData} />
-                        </div>
-                      ));
+                      const selectedYear = document.getElementById("anos").value;
+                      
+                      const filteredChartData = chartDataByYear[selectedYear];
+
+                      return (
+                          <>
+                              <div style={{ width: 700 }}>
+                                  <h3>{`${selectedYear}`}</h3>
+                                  <LineChart chartDadosMessages={filteredChartData} />
+                              </div>
+                          </>
+                      );
                     }
                   })()
                 }

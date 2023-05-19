@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { logAndStore } from "./log";
 import { StoreMesAnalytics } from "./analyticsMes";
 import { StoreAnoAnalytics } from "./analyticsAno";
+import { StoreDiaAnalytics } from "./analyticsDia";
 
 const Info = ({
   total,
@@ -67,6 +68,16 @@ const Info = ({
     });
   };
 
+  const storedDadosDiaMessages = localStorage.getItem("dadosDiaMessages");
+
+  const dadosDiaMessages = storedDadosDiaMessages
+    ? JSON.parse(storedDadosDiaMessages)
+    : null;
+
+  const updateDadosDiaInLocalStorage = () => {
+    localStorage.setItem("dadosDiaMessages", JSON.stringify(dadosDiaMessages));
+  };
+
   const storedDadosMesMessages = localStorage.getItem("dadosMesMessages");
 
   const dadosMesMessages = storedDadosMesMessages
@@ -92,6 +103,38 @@ const Info = ({
     const day = now.getDate();
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
+    const hour = now.getHours();
+
+    if (dadosDiaMessages !== null) {
+      dadosDiaMessages.forEach((dadoDia) => {
+        if (dadoDia.hour === hour) {
+          dadoDia.price = dadoDia.price + selectedDrink.price;
+          updateDadosDiaInLocalStorage();
+          return;
+        } else {
+          StoreDiaAnalytics([
+            {
+              hour: hour,
+              day: day,
+              price: price,
+              month: month,
+              year: year,
+            },
+          ]);
+          return;
+        }
+      });
+    } else {
+      StoreDiaAnalytics([
+        {
+          hour: hour,
+          day: day,
+          price: price,
+          month: month,
+          year: year,
+        },
+      ]);
+    }
 
     if (dadosMesMessages !== null) {
       dadosMesMessages.forEach((dadoMes) => {
