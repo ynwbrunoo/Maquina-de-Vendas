@@ -87,7 +87,11 @@ const Drink = ({ drink, onClick, totalCoins }) => {
         <h3>{(drink.price).toFixed(2)} €</h3>
       </div>
       <div className="quant">
+      {drink.quant === 0 ? (
+        <p style={{color: 'red'}}>Esgotado</p>
+      ) : (
         <p>Quantidade: {drink.quant}</p>
+      )}
       </div>
     </div>
   );
