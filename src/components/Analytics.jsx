@@ -99,43 +99,50 @@ const Analytics = () => {
   const getDayChartData = () => {
     const storedDadosDiaMessages =
       JSON.parse(localStorage.getItem("dadosDiaMessages")) || [];
-
-      const groupedDataByYear = _.groupBy(storedDadosDiaMessages, "year");
-      const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
-      const groupedDataByDayAndMonthAndYear = _.mapValues(groupedDataByMonthAndYear, monthData => _.groupBy(monthData, "day"));
-
-      const chartDataByDayAndMonthAndYear = {};
-    
-    for (const year in groupedDataByMonthAndYear) {
-        chartDataByMonthAndYear[year] = {};
-        for (const month in groupedDataByDayAndMonthAndYear) {
-          const monthData = groupedDataByDayAndMonthAndYear[month];
-          chartDataByDayAndMonthAndYear[month] = {};
-          for (const day in monthData) {
-            const dayData = monthData[day];
-            const chartData = {
-                labels: dayData.map((data) => data.hours),
-                datasets: [
-                    {
-                        label: "Dinheiro Ganho",
-                        data: dayData.map((data) => data.price),
-                        backgroundColor: ["#ffffff"],
-                        pointBackgroundColor: "black",
-                        pointBorderColor: "white",
-                        borderColor: "white",
-                        borderWidth: 2,
-                    },
-                ],
-            };
-            chartDataByDayAndMonthAndYear[year][month][day] = chartData;
-          }
+  
+    const groupedDataByYear = _.groupBy(storedDadosDiaMessages, "year");
+    const chartDataByDayAndMonthAndYear = {};
+  
+    for (const year in groupedDataByYear) {
+      chartDataByDayAndMonthAndYear[year] = {};
+      const yearData = groupedDataByYear[year];
+      const groupedDataByMonth = _.groupBy(yearData, "month");
+  
+      for (const month in groupedDataByMonth) {
+        chartDataByDayAndMonthAndYear[year][month] = {};
+        const monthData = groupedDataByMonth[month];
+        const groupedDataByDay = _.groupBy(monthData, "day");
+  
+        for (const day in groupedDataByDay) {
+          const dayData = groupedDataByDay[day];
+          const chartData = {
+            labels: [],
+            datasets: [
+              {
+                label: "Dinheiro Ganho",
+                data: [],
+                backgroundColor: ["#ffffff"],
+                pointBackgroundColor: "black",
+                pointBorderColor: "white",
+                borderColor: "white",
+                borderWidth: 2,
+              },
+            ],
+          };
+  
+          dayData.forEach((data) => {
+            chartData.labels.push(data.hour);
+            chartData.datasets[0].data.push(Number(data.price));
+          });
+  
+          chartDataByDayAndMonthAndYear[year][month][day] = chartData;
         }
+      }
     }
-
+  
     return chartDataByDayAndMonthAndYear;
   };
-
-
+  
   const handleModalOpen = () => {
     setShowModal(true);
   };
@@ -163,6 +170,8 @@ const Analytics = () => {
       setChartDataByMonthAndYear(monthChartData);
       document.getElementById("dias").disabled = false;
     } else {
+      const yearChartData = getYearChartData();
+      setChartDataByYear(yearChartData);
       document.getElementById("dias").disabled = true;
       document.getElementById("dias").value = "";
     }
@@ -172,7 +181,17 @@ const Analytics = () => {
     if(document.getElementById("dias").value !== "") {
       const dayChartData = getDayChartData();
       setChartDataByDayAndMonthAndYear(dayChartData);
+    } else {
+      const monthChartData = getMonthChartData();
+      setChartDataByMonthAndYear(monthChartData);
     }
+  }
+
+  const handleCleanValues = () => {
+    document.getElementById("dias").value = "";
+    document.getElementById("meses").value = "";
+    const yearChartData = getYearChartData();
+    setChartDataByYear(yearChartData);
   }
 
   return (
@@ -202,8 +221,7 @@ const Analytics = () => {
                 <div className="filtrar">
                   <h2>Filtrar</h2>
                   <select name="anos" id="anos" onChange={() => handleAnosValue()}>
-                    <option value="">Selecione o Ano</option>
-                    {storedDadosAnoMessages.map((data) => {
+                    {storedDadosAnoMessages.reverse().map((data) => {
                       if (!renderedDate.has(data.year)) {
                         renderedDate.add(data.year);
                         return (
@@ -245,6 +263,7 @@ const Analytics = () => {
                       return null;
                     })}
                   </select>
+                  <button onClick={() => handleCleanValues()}>Limpar</button>
                 </div>
                 <div className="graficos">
                 {

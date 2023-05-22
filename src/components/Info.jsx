@@ -104,15 +104,19 @@ const Info = ({
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
     const hour = now.getHours();
+    let bool = false;
 
     if (dadosDiaMessages !== null) {
+      bool = false;
       dadosDiaMessages.forEach((dadoDia) => {
-        if (dadoDia.hour === hour && dadoDia.day === day && dadoDia.month === month && dadoDia.year === year) {
-          dadoDia.price = dadoDia.price + selectedDrink.price;
+        if (dadoDia.hour === hour && dadoDia.day === now.getDate() && dadoDia.month === now.getMonth() + 1 && dadoDia.year === now.getFullYear()) {
+          dadoDia.price = Number(dadoDia.price);
+          dadoDia.price += selectedDrink.price;
+          dadoDia.price = (dadoDia.price).toFixed(2);
           updateDadosDiaInLocalStorage();
-          return;
+          bool = true;
         } 
-        if (dadoDia.hour !== hour && dadoDia.day !== day && dadoDia.month !== month && dadoDia.year !== year) {
+        if (bool === false) {
           StoreDiaAnalytics([
             {
               hour: hour,
@@ -122,7 +126,7 @@ const Info = ({
               year: year,
             },
           ]);
-          return;
+          bool = true;
         }
       });
     } else {
@@ -138,13 +142,16 @@ const Info = ({
     }
 
     if (dadosMesMessages !== null) {
+      bool = false;
       dadosMesMessages.forEach((dadoMes) => {
-        if (dadoMes.day === day && dadoMes.month === month && dadoMes.year === year) {
-          dadoMes.price = dadoMes.price + selectedDrink.price;
+        if (dadoMes.day === now.getDate() && dadoMes.month === now.getMonth() + 1 && dadoMes.year === now.getFullYear()) {
+          dadoMes.price = Number(dadoMes.price);
+          dadoMes.price += selectedDrink.price;
+          dadoMes.price = (dadoMes.price).toFixed(2);
           updateDadosMesInLocalStorage();
-          return;
-        }
-        if (dadoMes.day !== day && dadoMes.month !== month && dadoMes.year !== year) {
+          bool = true;
+        } 
+        if (bool === false) {
           StoreMesAnalytics([
             {
               day: day,
@@ -153,7 +160,7 @@ const Info = ({
               year: year,
             },
           ]);
-          return;
+          bool = true;
         }
       });
     } else {
@@ -168,13 +175,16 @@ const Info = ({
     }
 
     if (dadosAnoMessages !== null) {
+      bool = false;
       dadosAnoMessages.forEach((dadoAno) => {
-        if (dadoAno.month === month && dadoAno.Year === year) {
-          dadoAno.price = dadoAno.price + selectedDrink.price;
+        if (dadoAno.month === now.getMonth() + 1 && dadoAno.year === now.getFullYear()) {
+          dadoAno.price = Number(dadoAno.price);
+          dadoAno.price += selectedDrink.price;
+          dadoAno.price = (dadoAno.price).toFixed(2);
           updateDadosAnoInLocalStorage();
-          return;
+          bool = true;
         } 
-        if (dadoAno.month !== month && dadoAno.Year !== year) {
+        if(bool === false) {
           StoreAnoAnalytics([
             {
               price: price,
@@ -182,7 +192,7 @@ const Info = ({
               year: year,
             },
           ]);
-          return;
+          bool = true;
         }
       });
     } else {
