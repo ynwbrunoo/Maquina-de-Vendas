@@ -154,6 +154,33 @@ const Analytics = () => {
   
   const handleAnosValue = () => {
     if(document.getElementById("anos").value !== "") {
+      const selectedYear = document.getElementById("anos").value;
+  
+      const monthChartData = getMonthChartData(selectedYear);
+      setChartDataByMonthAndYear(monthChartData);
+  
+      const filteredMonths = Object.keys(monthChartData[selectedYear]);
+      const mesesSelect = document.getElementById("meses");
+  
+      // Remova as opções existentes no campo de seleção de meses
+      while (mesesSelect.options.length > 0) {
+        mesesSelect.remove(0);
+      }
+
+      const option = document.createElement("option");
+      option.text = "Selecione o Mês";
+      option.value = "";
+      mesesSelect.add(option);
+  
+      // Adicione as opções apenas para os meses correspondentes ao ano selecionado
+      filteredMonths.forEach((month) => {
+        const monthName = getMonthName(month);
+        const option = document.createElement("option");
+        option.text = monthName;
+        option.value = month;
+        mesesSelect.add(option);
+      });
+
       const yearChartData = getYearChartData();
       setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
@@ -189,9 +216,34 @@ const Analytics = () => {
   }
 
   const handleMesesValue = () => {
-    if(document.getElementById("meses").value !== "") {
-      const monthChartData = getMonthChartData();
-      setChartDataByMonthAndYear(monthChartData);
+    if (document.getElementById("meses").value !== "") {
+      const selectedYear = document.getElementById("anos").value;
+      const selectedMonth = document.getElementById("meses").value;
+  
+      const dayChartData = getDayChartData(selectedMonth);
+      setChartDataByDayAndMonthAndYear(dayChartData);
+  
+      const filteredDays = Object.keys(dayChartData[selectedYear][selectedMonth]);
+      const diasSelect = document.getElementById("dias");
+  
+      // Remova as opções existentes no campo de seleção de dias
+      while (diasSelect.options.length > 0) {
+        diasSelect.remove(0);
+      }
+
+      const option = document.createElement("option");
+      option.text = "Selecione o Dia";
+      option.value = "";
+      diasSelect.add(option);
+  
+      // Adicione as opções apenas para os dias correspondentes ao ano selecionado
+      filteredDays.forEach((day) => {
+        const option = document.createElement("option");
+        option.text = day;
+        option.value = day;
+        diasSelect.add(option);
+      });
+  
       document.getElementById("dias").disabled = false;
       setChartOptions({
         plugins: {
@@ -245,7 +297,7 @@ const Analytics = () => {
         },
       });
     }
-  }
+  };
 
   const handleDiasValue = () => {
     if(document.getElementById("dias").value !== "") {
