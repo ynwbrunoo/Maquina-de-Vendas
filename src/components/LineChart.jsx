@@ -12,19 +12,8 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Legend, Tooltip);
 
-const options = {
-  plugins: {
-    legend: true
-  },
-  scales: {
-    y: {
-      min: 0,
-    }
-  }
-}
-
-function LineChart({ chartDadosMessages }) {
-  return <Line data={chartDadosMessages} options={options} />;
+function LineChart({ chartDadosMessages, chartOptions }) {
+  return <Line data={chartDadosMessages} options={chartOptions} />;
 }
 
 export default LineChart;

@@ -17,6 +17,7 @@ const Analytics = () => {
   const [chartDataByYear, setChartDataByYear] = useState({});
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
   const [chartDataByDayAndMonthAndYear, setChartDataByDayAndMonthAndYear] = useState({});
+  const [chartOptions, setChartOptions] = useState({});
 
 
   const capitalize = (str) => {
@@ -157,6 +158,29 @@ const Analytics = () => {
       setChartDataByYear(yearChartData);
       document.getElementById("meses").disabled = false;
       document.getElementById("meses").value = "";
+      setChartOptions({
+        plugins: {
+          legend: true,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Meses",
+            },
+            ticks: {
+              autoSkip: false,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Lucro €",
+            },
+            min: 0,
+          },
+        },
+      });
     } else {
       document.getElementById("meses").disabled = true;
       document.getElementById("dias").disabled = true;
@@ -169,11 +193,57 @@ const Analytics = () => {
       const monthChartData = getMonthChartData();
       setChartDataByMonthAndYear(monthChartData);
       document.getElementById("dias").disabled = false;
+      setChartOptions({
+        plugins: {
+          legend: true,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Dias",
+            },
+            ticks: {
+              autoSkip: false,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Lucro €",
+            },
+            min: 0,
+          },
+        },
+      });
     } else {
       const yearChartData = getYearChartData();
       setChartDataByYear(yearChartData);
       document.getElementById("dias").disabled = true;
       document.getElementById("dias").value = "";
+      setChartOptions({
+        plugins: {
+          legend: true,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Meses",
+            },
+            ticks: {
+              autoSkip: false,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Lucro €",
+            },
+            min: 0,
+          },
+        },
+      });
     }
   }
 
@@ -181,9 +251,55 @@ const Analytics = () => {
     if(document.getElementById("dias").value !== "") {
       const dayChartData = getDayChartData();
       setChartDataByDayAndMonthAndYear(dayChartData);
+      setChartOptions({
+        plugins: {
+          legend: true,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Horas",
+            },
+            ticks: {
+              autoSkip: false,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Lucro €",
+            },
+            min: 0,
+          },
+        },
+      });
     } else {
       const monthChartData = getMonthChartData();
       setChartDataByMonthAndYear(monthChartData);
+      setChartOptions({
+        plugins: {
+          legend: true,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Dias",
+            },
+            ticks: {
+              autoSkip: false,
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Lucro €",
+            },
+            min: 0,
+          },
+        },
+      });
     }
   }
 
@@ -192,6 +308,31 @@ const Analytics = () => {
     document.getElementById("meses").value = "";
     const yearChartData = getYearChartData();
     setChartDataByYear(yearChartData);
+    setChartOptions({
+      plugins: {
+        legend: true,
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Meses",
+          },
+          ticks: {
+            autoSkip: false,
+            maxRotation: 90,
+            minRotation: 90,
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Lucro €",
+          },
+          min: 0,
+        },
+      },
+    });
   }
 
   return (
@@ -279,7 +420,7 @@ const Analytics = () => {
                           <>
                               <div style={{ width: 700 }}>
                                   <h3>{`Dia ${selectedDay}`}</h3>
-                                  <LineChart chartDadosMessages={filteredChartData} />
+                                  <LineChart chartDadosMessages={filteredChartData} chartOptions={chartOptions} />
                               </div>
                           </>
                       );
@@ -291,9 +432,10 @@ const Analytics = () => {
 
                       return (
                           <>
+
                               <div style={{ width: 700 }}>
                                   <h3>{`${getMonthName(selectedMonth)}`}</h3>
-                                  <LineChart chartDadosMessages={filteredChartData} />
+                                  <LineChart chartDadosMessages={filteredChartData} chartOptions={chartOptions}/>
                               </div>
                           </>
                       );
@@ -306,7 +448,7 @@ const Analytics = () => {
                           <>
                               <div style={{ width: 700 }}>
                                   <h3>{`${selectedYear}`}</h3>
-                                  <LineChart chartDadosMessages={filteredChartData} />
+                                  <LineChart chartDadosMessages={filteredChartData} chartOptions={chartOptions}/>
                               </div>
                           </>
                       );
