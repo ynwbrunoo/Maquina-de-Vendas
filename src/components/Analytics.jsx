@@ -210,8 +210,10 @@ const Analytics = () => {
       });
     } else {
       document.getElementById("meses").disabled = true;
+      document.getElementById("meses").value = "";
       document.getElementById("dias").disabled = true;
       document.getElementById("dias").value = "";
+      setChartDataByYear(null);
     }
   }
 
@@ -358,8 +360,8 @@ const Analytics = () => {
   const handleCleanValues = () => {
     document.getElementById("dias").value = "";
     document.getElementById("meses").value = "";
-    const yearChartData = getYearChartData();
-    setChartDataByYear(yearChartData);
+    document.getElementById("anos").value = "";
+    setChartDataByYear(null);
     setChartOptions({
       plugins: {
         legend: true,
@@ -414,6 +416,7 @@ const Analytics = () => {
                 <div className="filtrar">
                   <h2>Filtrar</h2>
                   <select name="anos" id="anos" onChange={() => handleAnosValue()}>
+                  <option value="">Selecione o Ano</option>
                     {storedDadosAnoMessages.reverse().map((data) => {
                       if (!renderedDate.has(data.year)) {
                         renderedDate.add(data.year);
