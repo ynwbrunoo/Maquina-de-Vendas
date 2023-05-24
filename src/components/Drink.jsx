@@ -18,12 +18,18 @@ const Drink = ({ drink, onClick, totalCoins }) => {
   useEffect(() => {
     drinks.forEach((d) => {
       if (totalCoins / 100 >= d.price) {
-        document.getElementById(d.name).style.backgroundColor = "#222222";
-        document.getElementById(d.name).style.cursor = "pointer";
+        if (d.quant === 0) {
+          document.getElementById(d.name).style.backgroundColor = "#757575";
+          document.getElementById(d.name).style.cursor = "not-allowed";
+        } else {
+          document.getElementById(d.name).style.backgroundColor = "#222222";
+          document.getElementById(d.name).style.cursor = "pointer";
+        }
       } else {
         document.getElementById(d.name).style.backgroundColor = "#757575";
         document.getElementById(d.name).style.cursor = "not-allowed";
       }
+      
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCoins]);
@@ -46,6 +52,16 @@ const Drink = ({ drink, onClick, totalCoins }) => {
       return;
     }
 
+    if (drink.quant === 0) {
+      toast.error(
+        `Já não há mais ${drink.name}. Espere até a máquina ser reabastecida!`,
+        { autoClose: 2000 }
+      );
+      document.getElementById(drink.name).style.backgroundColor = "#757575";
+      document.getElementById(drink.name).removeAttribute("data-selected");
+      return;
+    }
+
     onClick(drink);
 
     toast.info(`Selecionou a bebida ${drink.name}!`, { autoClose: 2000 });
@@ -61,7 +77,11 @@ const Drink = ({ drink, onClick, totalCoins }) => {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
         } else {
-          document.getElementById(d.name).style.backgroundColor = "#222222";
+          if (d.quant === 0) {
+            document.getElementById(d.name).style.backgroundColor = "#757575";
+          } else {
+            document.getElementById(d.name).style.backgroundColor = "#222222";
+          }
         }
         document.getElementById(d.name).removeAttribute("data-selected");
       }

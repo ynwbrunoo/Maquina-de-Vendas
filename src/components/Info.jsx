@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import defaultDrinks from "./defaultDrinks";
 import defaultCoins from "./defaultCoins";
 import { toast } from "react-toastify";
@@ -14,7 +13,6 @@ const Info = ({
   setTotalCoins,
   coinList,
 }) => {
-  const [faltaPagar, setFaltaPagar] = useState();
 
   const storedDrinks = localStorage.getItem("drinks");
 
@@ -24,14 +22,6 @@ const Info = ({
   const updateDrinksInLocalStorage = () => {
     localStorage.setItem("drinks", JSON.stringify(drinks));
   };
-
-  useEffect(() => {
-    if (selectedDrink) {
-      setFaltaPagar(selectedDrink.price - parseInt(total) / 100);
-    } else {
-      setFaltaPagar();
-    }
-  }, [selectedDrink, total]);
 
   const retirarQuant = () => {
     drinks.forEach((drink) => {
@@ -280,18 +270,6 @@ const Info = ({
       setSelectedDrink(null);
       setTotalCoins(0);
       addMoney();
-    } else if (total / 100 < selectedDrink.price) {
-      toast.warn(
-        `Falta ${((faltaPagar * 100) / 100).toFixed(2)} EUR para comprar uma ${
-          selectedDrink.name
-        }!`,
-        { autoClose: 4000 }
-      );
-      console.log(
-        `Falta ${((faltaPagar * 100) / 100).toFixed(2)} EUR para comprar uma ${
-          selectedDrink.name
-        }!`
-      );
     }
   };
 
@@ -331,16 +309,6 @@ const Info = ({
                   <th>Valor introduzido:</th>
                   <td>
                     {total / 100 > 0 ? `${(total / 100).toFixed(2)}` : "0"} EUR
-                  </td>
-                </tr>
-                <tr>
-                  <th>Falta pagar:</th>
-                  <td>
-                    {" "}
-                    {faltaPagar > 0
-                      ? `${((faltaPagar * 100) / 100).toFixed(2)}`
-                      : "0"}{" "}
-                    EUR{" "}
                   </td>
                 </tr>
               </tbody>

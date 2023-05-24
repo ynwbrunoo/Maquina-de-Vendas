@@ -34,7 +34,11 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
         } else {
-          document.getElementById(d.name).style.backgroundColor = "#222222";
+          if (d.quant === 0) {
+            document.getElementById(d.name).style.backgroundColor = "#757575";
+          } else {
+            document.getElementById(d.name).style.backgroundColor = "#222222";
+          }
         }
         document.getElementById(d.name).removeAttribute("data-selected");
       });
