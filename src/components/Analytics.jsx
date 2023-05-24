@@ -18,6 +18,47 @@ const Analytics = () => {
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
   const [chartDataByDayAndMonthAndYear, setChartDataByDayAndMonthAndYear] = useState({});
   const [chartOptions, setChartOptions] = useState({});
+  // eslint-disable-next-line no-unused-vars
+  const [chartOptionsDefault, setChartOptionsDefault] = useState({
+    plugins: {
+      legend: true,
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Tempo Indefinido",
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 90,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Lucro €",
+        },
+        min: 0,
+      },
+    },
+  });
+
+  const chartDataDefault = {
+    labels: "-",
+    datasets: [
+      {
+        label: "-",
+        data: "-",
+        backgroundColor: ["#ffffff"],
+        pointBackgroundColor: "black",
+        pointBorderColor: "white",
+        borderColor: "white",
+        borderWidth: 2,
+      },
+    ],
+  };
 
 
   const capitalize = (str) => {
@@ -507,6 +548,15 @@ const Analytics = () => {
                               </div>
                           </>
                       );
+                    } else {
+                      return (
+                        <>
+                            <div style={{ width: 700 }}>
+                                <h3>{`-`}</h3>
+                                <LineChart chartDadosMessages={chartDataDefault} chartOptions={chartOptionsDefault}/>
+                            </div>
+                        </>
+                    );
                     }
                   })()
                 }
