@@ -1,16 +1,41 @@
-import defaultCoins from "./defaultCoins";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import defaultCoins from './defaultCoins';
 
 const CoinBox = () => {
-  // Verifica se o objeto de moedas existe no localStorage
-  const storedCoins = localStorage.getItem("coinsBox");
+  const [coinsBox, setCoinsBox] = useState([]);
 
-  // Se o objeto de moedas existir, usa-o. Se não, usa o objeto de moedas default.
-  const coinsBox = storedCoins ? JSON.parse(storedCoins) : defaultCoins;
+  useEffect(() => {
+    // Função assíncrona para obter os dados do moedeiro da API
+    const fetchCoinsBox = async () => {
+      try {
+        const response = await axios.get('https://localhost:7280/api/CoinsBoxes');
+        setCoinsBox(response.data || defaultCoins);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  // Armazena o objeto de moedas no localStorage se ele não existir
-  if (!storedCoins) {
-    localStorage.setItem("coinsBox", JSON.stringify(defaultCoins));
-  }
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchCoinsBox();
+  }, []);
+
+  useEffect(() => {
+    // Função assíncrona para salvar os dados do moedeiro na API
+    const saveCoinsBox = async () => {
+      try {
+        // Verificar se não há dados na API antes de enviar a solicitação POST
+        if (coinsBox.length === 0) {
+          await axios.post('https://localhost:7280/api/CoinsBoxes', defaultCoins);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Chamar a função para salvar os dados do moedeiro sempre que houver uma mudança no estado "coinsBox"
+    saveCoinsBox();
+  }, [coinsBox]);
 
   return (
     <div className="coinbox">
@@ -50,3 +75,5 @@ const CoinBox = () => {
 };
 
 export default CoinBox;
+
+  
