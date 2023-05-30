@@ -1,7 +1,29 @@
 import { toast } from 'react-toastify';
 import { logAndStore } from './log';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import defaultCoins from './defaultCoins';
 
 const Coin = ({ setTotalCoins, setCoinList}) => {
+
+  const [coinsBox, setCoinsBox] = useState([]);
+
+  useEffect(() => {
+    // Função assíncrona para obter os dados do moedeiro da API
+    const fetchCoinsBox = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7280/Coins/GetCoinsBox"
+        );
+        setCoinsBox(response.data || defaultCoins);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchCoinsBox();
+  }, []);
 
   const getCurrentTime = () => {
     const date = new Date();
@@ -34,12 +56,18 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
         <h2>Introduza moedas</h2>
       </div>
       <div className="moedas">
-        <button onClick={() => handleCoinClick(5)}>{5} cent</button>
-        <button onClick={() => handleCoinClick(10)}>{10} cent</button>
-        <button onClick={() => handleCoinClick(20)}>{20} cent</button>
-        <button onClick={() => handleCoinClick(50)}>{50} cent</button>
-        <button onClick={() => handleCoinClick(100)}>{1} EUR</button>
-        <button onClick={() => handleCoinClick(200)}>{2} EUR</button>
+        {coinsBox.map((coin) => {
+          if(coin.moeda >= 100) {
+            return (
+              <button key={coin.id} onClick={() => handleCoinClick(coin.moeda)}>{coin.moeda / 100} EUR</button>
+            )
+          } else {
+            return (
+              <button key={coin.id} onClick={() => handleCoinClick(coin.moeda)}>{coin.moeda} cent</button>
+            )
+          }
+          
+          })}
       </div>
     </div>
   );

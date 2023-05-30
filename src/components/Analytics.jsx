@@ -4,16 +4,55 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import LineChart from "./LineChart";
 import _ from "lodash";
+import axios from "axios";
 
 const Analytics = () => {
   const [showModal, setShowModal] = useState(false);
-  const storedDadosDiaMessages =
-    JSON.parse(localStorage.getItem("dadosDiaMessages")) || [];
-  const storedDadosMesMessages =
-    JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
+  const [storedDadosDiaMessages, setStoredDadosDiaMessages] = useState([]);
+  const [storedDadosMesMessages, setStoredDadosMesMessages] = useState([]);
+  const [storedDadosAnoMessages, setStoredDadosAnoMessages] = useState([]);
 
-  const storedDadosAnoMessages =
-    JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
+      const fetchStoredDadosDiaMessages = async () => {
+        try {
+          const response = await axios.get(
+            "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+          );
+          setStoredDadosDiaMessages(response.data || "");
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      // Chamar a função para obter os dados do moedeiro ao montar o componente
+      fetchStoredDadosDiaMessages();
+
+      // Função assíncrona para obter os dados do moedeiro da API
+      const fetchStoredDadosMesMessages = async () => {
+        try {
+          const response = await axios.get(
+            "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+          );
+          setStoredDadosMesMessages(response.data || "");
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      // Chamar a função para obter os dados do moedeiro ao montar o componente
+      fetchStoredDadosMesMessages();
+
+      // Função assíncrona para obter os dados do moedeiro da API
+      const fetchStoredDadosAnoMessages = async () => {
+        try {
+          const response = await axios.get(
+            "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+          );
+          setStoredDadosAnoMessages(response.data || "");
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
   const [chartDataByYear, setChartDataByYear] = useState({});
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
   const [chartDataByDayAndMonthAndYear, setChartDataByDayAndMonthAndYear] = useState({});
@@ -73,9 +112,6 @@ const Analytics = () => {
   };
 
   const getYearChartData = () => {
-    let storedDadosAnoMessages =
-      JSON.parse(localStorage.getItem("dadosAnoMessages")) || [];
-      
       const groupedData = _.groupBy(storedDadosAnoMessages, "year");
 
       const chartDataByYear = {};
@@ -104,8 +140,6 @@ const Analytics = () => {
   };
 
   const getMonthChartData = () => {
-    const storedDadosMesMessages =
-      JSON.parse(localStorage.getItem("dadosMesMessages")) || [];
 
       const groupedDataByYear = _.groupBy(storedDadosMesMessages, "year");
       const groupedDataByMonthAndYear = _.mapValues(groupedDataByYear, yearData => _.groupBy(yearData, "month"));
@@ -139,8 +173,6 @@ const Analytics = () => {
   };
 
   const getDayChartData = () => {
-    const storedDadosDiaMessages =
-      JSON.parse(localStorage.getItem("dadosDiaMessages")) || [];
   
     const groupedDataByYear = _.groupBy(storedDadosDiaMessages, "year");
     const chartDataByDayAndMonthAndYear = {};
@@ -436,6 +468,9 @@ const Analytics = () => {
         <button
           onClick={() => {
             handleModalOpen();
+            fetchStoredDadosAnoMessages();
+            fetchStoredDadosDiaMessages();
+            fetchStoredDadosMesMessages();
           }}
         >
           <img

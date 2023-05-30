@@ -1,22 +1,32 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import axios from "axios";
 
 const Log = () => {
   const [showModal, setShowModal] = useState(false);
   const [logMessages, setLogMessages] = useState([]);
 
-  const getLogMessages = () => {
-    const storedLogMessages =
-      JSON.parse(localStorage.getItem("logMessages")) || [];
-    setLogMessages(storedLogMessages);
-  };
+    // Função assíncrona para obter os dados do moedeiro da API
+    const fetchLogMessages = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7280/LogMessages/GetLogMessages"
+        );
+        setLogMessages(response.data || "");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchLogMessages();
 
   return (
     <div className="history">
       <div className="log">
         <button
           onClick={() => {
-            setShowModal(true), getLogMessages();
+            setShowModal(true), fetchLogMessages();
           }}
         >
           <img
@@ -34,8 +44,8 @@ const Log = () => {
               <h2>Histórico:</h2>
               <div className="lista">
                 <ul>
-                  {logMessages.reverse().map((message, index) => (
-                    <li key={index}>{message}</li>
+                  {logMessages.reverse().map((message) => (
+                    <li key={message.id}>{message.message}</li>
                   ))}
                 </ul>
               </div>

@@ -5,6 +5,7 @@ import { logAndStore } from "./log";
 import { StoreMesAnalytics } from "./analyticsMes";
 import { StoreAnoAnalytics } from "./analyticsAno";
 import { StoreDiaAnalytics } from "./analyticsDia";
+import axios from "axios";
 
 const Info = ({
   total,
@@ -38,9 +39,21 @@ const Info = ({
 
   const coinsBox = storedCoins ? JSON.parse(storedCoins) : defaultCoins;
 
-  const updateCoinsBoxInLocalStorage = () => {
-    localStorage.setItem("coinsBox", JSON.stringify(coinsBox));
+  const saveCoinsBoxToAPI = async (coins) => {
+    try {
+      await axios.post('https://localhost:7280/Coins/PostCoinsBox', coins);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const updateCoinsBoxInLocalStorage = (coins) => {
+    saveCoinsBoxToAPI(coins); // Salvar na API
+  
+    localStorage.setItem("coinsBox", JSON.stringify(coins)); // Atualizar no LocalStorage
+  };
+  
+  
 
   const troco = () => {
     coinsBox.forEach((coin, index) => {
@@ -52,7 +65,7 @@ const Info = ({
           coinsBox[index].quantidade = coin.quantidade - 1;
           coinsBox[index].valorTotal = (coin.moeda * coin.quantidade) / 100;
           total = total - coinsBox[index].moeda;
-          updateCoinsBoxInLocalStorage();
+          updateCoinsBoxInLocalStorage(coinsBox);
         }
       }
     });
@@ -202,7 +215,7 @@ const Info = ({
         if (coinList[index1] === coinsBox[index2].moeda) {
           coinsBox[index2].quantidade = coin2.quantidade + 1;
           coinsBox[index2].valorTotal = (coin2.moeda * coin2.quantidade) / 100;
-          updateCoinsBoxInLocalStorage();
+          updateCoinsBoxInLocalStorage(coinsBox);
         }
       });
     });

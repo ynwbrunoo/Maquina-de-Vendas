@@ -1,7 +1,8 @@
 import defaultDrinks from "./defaultDrinks";
 import Drink from "./Drink";
 import { logAndStore } from "./log";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
 
@@ -17,16 +18,26 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
     return `${date.toLocaleDateString("pt-PT", options)}`;
   };
 
-  // verificar se o objeto de moedas existe no localStorage
-  const storedDrinks = localStorage.getItem("drinks");
+  const [drinks, setDrinks] = useState([]);
 
-  // se o objeto de moedas existir, use-o. Se não, use o objeto de moedas padrão.
-  const drinks = storedDrinks ? JSON.parse(storedDrinks) : defaultDrinks;
-
-  // armazenar o objeto de moedas no localStorage se ele não existir
-  if (!storedDrinks) {
-    localStorage.setItem("drinks", JSON.stringify(defaultDrinks));
-  }
+  useEffect(() => {
+    // Função assíncrona para obter os dados do moedeiro da API
+    const fetchDrinks = async () => {
+      try {
+        const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
+        setDrinks(response.data || defaultDrinks);
+  
+        if (response.data === null) {
+          await axios.post('https://localhost:7280/Drinks/PostDrinks', defaultDrinks);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchDrinks();
+  }, []);
 
   useEffect(() => {
     if (selectedDrink === null) {

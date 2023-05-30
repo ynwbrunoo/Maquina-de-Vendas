@@ -217,6 +217,7 @@ td {
   transition: 0.4s;
   border-radius: 15px;
   cursor: not-allowed;
+  background-color: rgb(117, 117, 117);
 }
 
 .image {
