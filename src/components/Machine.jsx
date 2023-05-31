@@ -25,11 +25,10 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
     const fetchDrinks = async () => {
       try {
         const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
-        setDrinks(response.data || defaultDrinks);
-  
-        if (response.data === null) {
+        if (response.data.length <= 0) {
           await axios.post('https://localhost:7280/Drinks/PostDrinks', defaultDrinks);
         }
+        setDrinks(response.data || defaultDrinks);
       } catch (error) {
         console.error(error);
       }

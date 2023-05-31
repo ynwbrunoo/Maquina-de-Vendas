@@ -6,19 +6,20 @@ const CoinBox = () => {
   const [coinsBox, setCoinsBox] = useState([]);
 
   useEffect(() => {
-    // Função assíncrona para obter os dados do moedeiro da API
     const fetchCoinsBox = async () => {
       try {
         const response = await axios.get(
           "https://localhost:7280/Coins/GetCoinsBox"
         );
-        setCoinsBox(response.data || defaultCoins);
+        if (response.data.length <= 0) {
+          await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
+        }
+        setCoinsBox(response.data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchCoinsBox();
   }, []);
 
@@ -34,29 +35,19 @@ const CoinBox = () => {
             <th>Quantidade</th>
             <th>Valor Total</th>
           </tr>
-          {coinsBox.sort((a, b) => b.moeda - a.moeda).map((coin) => {
-            if (coin.moeda >= 100) {
-              return (
-                <tr key={coin.moeda}>
-                  <td>{coin.moeda / 100} EUR</td>
-                  <td>{coin.quantidade}</td>
-                  <td>
-                    {((coin.moeda / 100) * coin.quantidade).toFixed(2)} EUR
-                  </td>
-                </tr>
-              );
-            } else {
-              return (
-                <tr key={coin.moeda}>
-                  <td>{coin.moeda} cent</td>
-                  <td>{coin.quantidade}</td>
-                  <td>
-                    {((coin.moeda / 100) * coin.quantidade).toFixed(2)} EUR
-                  </td>
-                </tr>
-              );
-            }
-          })}
+          {coinsBox
+            .sort((a, b) => b.moeda - a.moeda)
+            .map((coin) => (
+              <tr key={coin.moeda}>
+                <td>
+                  {coin.moeda >= 100
+                    ? coin.moeda / 100 + " EUR"
+                    : coin.moeda + " cent"}
+                </td>
+                <td>{coin.quantidade}</td>
+                <td>{((coin.moeda / 100) * coin.quantidade).toFixed(2)} EUR</td>
+              </tr>
+            ))}
         </table>
       </div>
     </div>

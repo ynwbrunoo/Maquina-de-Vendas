@@ -15,6 +15,9 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
         const response = await axios.get(
           "https://localhost:7280/Coins/GetCoinsBox"
         );
+        if (response.data.length <= 0) {
+          await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
+        }
         setCoinsBox(response.data || defaultCoins);
       } catch (error) {
         console.error(error);
