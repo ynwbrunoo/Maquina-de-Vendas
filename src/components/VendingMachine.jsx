@@ -34,6 +34,7 @@ const VendingMachine = () => {
           setSelectedDrink={setSelectedDrink}
           setTotalCoins={setTotalCoins}
           coinList={coinList}
+          setCoinList={setCoinList}
         />
         <CoinBox />
         <div className="logbtns">

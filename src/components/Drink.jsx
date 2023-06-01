@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import defaultDrinks from "./defaultDrinks";
 import axios from "axios";
 import { useState } from "react";
 
@@ -13,19 +12,6 @@ const Drink = ({ drink, onClick, totalCoins }) => {
     const fetchDrinks = async () => {
       try {
         const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
-
-        if (response.data.length <= 0) {
-          defaultDrinks.forEach(async (drink) => {
-            try {
-              await axios.post("https://localhost:7280/Drinks/PostDrinks", drink);
-              console.log('Enviado:', JSON.stringify(drink));
-            } catch (error) {
-              console.error('Erro ao enviar:', JSON.stringify(drink));
-              console.error(error);
-            }
-          });
-        }
-  
         setDrinks(response.data);
       } catch (error) {
         console.error(error);

@@ -2,10 +2,9 @@ import { toast } from 'react-toastify';
 import { logAndStore } from './log';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import defaultCoins from './defaultCoins';
 
 const Coin = ({ setTotalCoins, setCoinList}) => {
-
+  const [isLoading, setIsLoading] = useState(true);
   const [coinsBox, setCoinsBox] = useState([]);
 
   useEffect(() => {
@@ -15,18 +14,24 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
         const response = await axios.get(
           "https://localhost:7280/Coins/GetCoinsBox"
         );
-        if (response.data.length <= 0) {
-          await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
-        }
-        setCoinsBox(response.data || defaultCoins);
+        setIsLoading(false);
+        setCoinsBox(response.data);
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
     };
 
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchCoinsBox();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loading-pane">
+        <h2 className="loader">🧃</h2>
+      </div>
+    );
+  }
 
   const getCurrentTime = () => {
     const date = new Date();

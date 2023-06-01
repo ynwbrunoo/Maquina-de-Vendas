@@ -3,6 +3,7 @@ import axios from "axios";
 import defaultCoins from "./defaultCoins";
 
 const CoinBox = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [coinsBox, setCoinsBox] = useState([]);
 
   useEffect(() => {
@@ -12,24 +13,30 @@ const CoinBox = () => {
           "https://localhost:7280/Coins/GetCoinsBox"
         );
         if (response.data.length <= 0) {
-          defaultCoins.forEach(async (coin) => {
             try {
-              await axios.post("https://localhost:7280/Coins/PostCoinsBox", coin);
-              console.log('Enviado:', JSON.stringify(coin));
+              await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
             } catch (error) {
-              console.error('Erro ao enviar:', JSON.stringify(coin));
               console.error(error);
             }
-          });
         }
+        setIsLoading(false);
         setCoinsBox(response.data);
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
     };
 
     fetchCoinsBox();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loading-pane">
+        <h2 className="loader">🧃</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="coinbox">

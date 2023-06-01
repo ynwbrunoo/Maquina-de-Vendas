@@ -19,6 +19,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
   };
 
   const [drinks, setDrinks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
@@ -26,10 +27,20 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
       try {
         const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
         if (response.data.length <= 0) {
-          await axios.post('https://localhost:7280/Drinks/PostDrinks', defaultDrinks);
+          defaultDrinks.forEach(async (drink) => {
+            try {
+              await axios.post("https://localhost:7280/Drinks/PostDrinks", drink);
+              console.log('Enviado:', JSON.stringify(drink));
+            } catch (error) {
+              console.error('Erro ao enviar:', JSON.stringify(drink));
+              console.error(error);
+            }
+          });
         }
+        setIsLoading(false);
         setDrinks(response.data || defaultDrinks);
       } catch (error) {
+        setIsLoading(false);
         console.error(error);
       }
     };
@@ -55,6 +66,14 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDrink]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-pane">
+        <h2 className="loader">🧃</h2>
+      </div>
+    );
+  }
 
   let timeoutId;
 

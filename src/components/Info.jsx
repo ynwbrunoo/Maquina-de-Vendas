@@ -1,11 +1,11 @@
 import defaultDrinks from "./defaultDrinks";
-import defaultCoins from "./defaultCoins";
 import { toast } from "react-toastify";
 import { logAndStore } from "./log";
 import { StoreMesAnalytics } from "./analyticsMes";
 import { StoreAnoAnalytics } from "./analyticsAno";
 import { StoreDiaAnalytics } from "./analyticsDia";
 import axios from "axios";
+import { useState } from "react";
 
 const Info = ({
   total,
@@ -13,6 +13,7 @@ const Info = ({
   setSelectedDrink,
   setTotalCoins,
   coinList,
+  setCoinList
 }) => {
 
   const storedDrinks = localStorage.getItem("drinks");
@@ -35,41 +36,30 @@ const Info = ({
     });
   };
 
-  const storedCoins = localStorage.getItem("coinsBox");
+  const [coinsBox, setCoinsBox] = useState([]);
 
-  const coinsBox = storedCoins ? JSON.parse(storedCoins) : defaultCoins;
+  const troco = async () => {
+    const updatedCoinsBox = coinsBox.map((coin) => {
+      if (
+        (total / 100 - selectedDrink.price).toFixed(2) >= coin.moeda / 100
+      ) {
+        const updatedQuantidade = coin.quantidade - 1;
+        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
 
-  const saveCoinsBoxToAPI = async (coins) => {
+        return { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal };
+      }
+      return coin;
+    });
+
     try {
-      await axios.post('https://localhost:7280/Coins/PostCoinsBox', coins);
+      await axios.post("https://localhost:7280/Coins/PostCoinsBox", updatedCoinsBox);
+
+      setCoinsBox(updatedCoinsBox);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const updateCoinsBoxInLocalStorage = (coins) => {
-    saveCoinsBoxToAPI(coins); // Salvar na API
-  
-    localStorage.setItem("coinsBox", JSON.stringify(coins)); // Atualizar no LocalStorage
-  };
-  
-  
-
-  const troco = () => {
-    coinsBox.forEach((coin, index) => {
-      if (
-        (total / 100 - selectedDrink.price).toFixed(2) >=
-        coinsBox[index].moeda / 100
-      ) {
-        if (coin.moeda === coinsBox[index].moeda) {
-          coinsBox[index].quantidade = coin.quantidade - 1;
-          coinsBox[index].valorTotal = (coin.moeda * coin.quantidade) / 100;
-          total = total - coinsBox[index].moeda;
-          updateCoinsBoxInLocalStorage(coinsBox);
-        }
-      }
-    });
-  };
 
   const storedDadosDiaMessages = localStorage.getItem("dadosDiaMessages");
 
@@ -209,20 +199,34 @@ const Info = ({
     }
   };
 
-  const addMoney = () => {
-    coinList.forEach((coin1, index1) => {
-      coinsBox.forEach((coin2, index2) => {
-        if (coinList[index1] === coinsBox[index2].moeda) {
-          coinsBox[index2].quantidade = coin2.quantidade + 1;
-          coinsBox[index2].valorTotal = (coin2.moeda * coin2.quantidade) / 100;
-          updateCoinsBoxInLocalStorage(coinsBox);
-        }
+  const addMoney = async () => {
+    try {
+      const updatedCoinsBoxList = coinsBox.map((coin) => {
+        const foundCoin = coinList.find((c) => c === coin.moeda);
+  
+        const updatedQuantidade = foundCoin ? coin.quantidade + 1 : coin.quantidade;
+        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
+  
+        return { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal };
       });
-    });
-    for (let i = 0; i < coinList.length; i++) {
-      coinList[i] = 0;
+  
+      console.log("Updated CoinsBoxList:", updatedCoinsBoxList);
+  
+      await axios.post("https://localhost:7280/Coins/PostCoinsBox", updatedCoinsBoxList);
+  
+      setCoinsBox(updatedCoinsBoxList);
+      setCoinList(new Array(coinList.length).fill(0));
+    } catch (error) {
+      console.error(error);
     }
   };
+  
+  
+  
+  
+  
+  
+  
 
   const getCurrentTime = () => {
     const date = new Date();

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./Modal";
 import axios from "axios";
 
@@ -12,14 +12,25 @@ const Log = () => {
       const response = await axios.get(
         "https://localhost:7280/LogMessages/GetLogMessages"
       );
+      if (response.isLoading) {
+        return (
+          <div className="loading-pane">
+            <h2 className="loader">🧃</h2>
+          </div>
+        );
+      }
       setLogMessages(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Chamar a função para obter os dados do moedeiro ao montar o componente
-  fetchLogMessages();
+  
+
+  useEffect(() => {
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchLogMessages();
+  }, []);
   if (logMessages.length > 0) {
     return (
       <div className="history">

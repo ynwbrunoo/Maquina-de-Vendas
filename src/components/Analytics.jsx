@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
@@ -23,10 +23,6 @@ const Analytics = () => {
     }
   };
 
-  // Chamar a função para obter os dados do moedeiro ao montar o componente
-  fetchStoredDadosDiaMessages();
-
-  // Função assíncrona para obter os dados do moedeiro da API
   const fetchStoredDadosMesMessages = async () => {
     try {
       const response = await axios.get(
@@ -37,9 +33,6 @@ const Analytics = () => {
       console.error(error);
     }
   };
-
-  // Chamar a função para obter os dados do moedeiro ao montar o componente
-  fetchStoredDadosMesMessages();
 
   // Função assíncrona para obter os dados do moedeiro da API
   const fetchStoredDadosAnoMessages = async () => {
@@ -52,6 +45,15 @@ const Analytics = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchStoredDadosDiaMessages();
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchStoredDadosMesMessages();
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchStoredDadosAnoMessages();
+  }, []);
 
   const [chartDataByYear, setChartDataByYear] = useState({});
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
@@ -468,7 +470,11 @@ const Analytics = () => {
       },
     });
   };
-  if (storedDadosAnoMessages.length > 0 && storedDadosMesMessages.length > 0 && storedDadosDiaMessages.length > 0) {
+  if (
+    storedDadosAnoMessages.length > 0 &&
+    storedDadosMesMessages.length > 0 &&
+    storedDadosDiaMessages.length > 0
+  ) {
     return (
       <div className="history">
         <div className="log">
