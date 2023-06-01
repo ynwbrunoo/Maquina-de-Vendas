@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import defaultCoins from "./defaultCoins";
 
-const CoinBox = () => {
+const CoinBox = ({coinsBox, setCoinsBox}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [coinsBox, setCoinsBox] = useState([]);
-
+  
   useEffect(() => {
     const fetchCoinsBox = async () => {
       try {
@@ -28,6 +27,7 @@ const CoinBox = () => {
     };
 
     fetchCoinsBox();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
@@ -50,9 +50,7 @@ const CoinBox = () => {
             <th>Quantidade</th>
             <th>Valor Total</th>
           </tr>
-          {coinsBox
-            .sort((a, b) => b.moeda - a.moeda)
-            .map((coin) => (
+          {coinsBox.sort((a, b) => b.moeda - a.moeda).map((coin) => (
               <tr key={coin.moeda}>
                 <td>
                   {coin.moeda >= 100

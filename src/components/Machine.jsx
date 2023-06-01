@@ -4,7 +4,7 @@ import { logAndStore } from "./log";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
+const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrinks }) => {
 
   const getCurrentTime = () => {
     const date = new Date();
@@ -18,7 +18,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
     return `${date.toLocaleDateString("pt-PT", options)}`;
   };
 
-  const [drinks, setDrinks] = useState([]);
+  
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,15 +27,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
       try {
         const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
         if (response.data.length <= 0) {
-          defaultDrinks.forEach(async (drink) => {
-            try {
-              await axios.post("https://localhost:7280/Drinks/PostDrinks", drink);
-              console.log('Enviado:', JSON.stringify(drink));
-            } catch (error) {
-              console.error('Erro ao enviar:', JSON.stringify(drink));
-              console.error(error);
-            }
-          });
+          await axios.post("https://localhost:7280/Drinks/PostDrinks", defaultDrinks);
         }
         setIsLoading(false);
         setDrinks(response.data || defaultDrinks);
@@ -47,6 +39,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins }) => {
   
     // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchDrinks();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -163,6 +163,7 @@ td {
 #modal > div {
   background-color: #0f0f0f;
   max-width: 100%;
+  min-width: 60%;
   max-height: 95%;
   height: auto;
   padding: 45px;

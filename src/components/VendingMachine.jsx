@@ -12,6 +12,8 @@ const VendingMachine = () => {
   const [totalCoins, setTotalCoins] = useState(0);
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [coinList, setCoinList] = useState([]);
+  const [drinks, setDrinks] = useState([]);
+  const [coinsBox, setCoinsBox] = useState([]);
 
   return (
     <div className="machine">
@@ -20,6 +22,8 @@ const VendingMachine = () => {
           setSelectedDrink={setSelectedDrink}
           selectedDrink={selectedDrink}
           totalCoins={totalCoins}
+          drinks={drinks}
+          setDrinks={setDrinks}
         />
       </div>
       <div className="right">
@@ -27,6 +31,8 @@ const VendingMachine = () => {
         <Coins
           setTotalCoins={setTotalCoins}
           setCoinList={setCoinList}
+          coinsBox={coinsBox}
+          setCoinsBox={setCoinsBox}
         />
         <Info
           total={totalCoins}
@@ -35,8 +41,12 @@ const VendingMachine = () => {
           setTotalCoins={setTotalCoins}
           coinList={coinList}
           setCoinList={setCoinList}
+          drinks={drinks}
+          setDrinks={setDrinks}
+          coinsBox={coinsBox}
+          setCoinsBox={setCoinsBox}
         />
-        <CoinBox />
+        <CoinBox coinsBox={coinsBox} setCoinsBox={setCoinsBox} />
         <div className="logbtns">
           <Log />
           <Analytics />

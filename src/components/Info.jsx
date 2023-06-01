@@ -5,7 +5,7 @@ import { StoreMesAnalytics } from "./analyticsMes";
 import { StoreAnoAnalytics } from "./analyticsAno";
 import { StoreDiaAnalytics } from "./analyticsDia";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect } from "react";
 
 const Info = ({
   total,
@@ -13,30 +13,74 @@ const Info = ({
   setSelectedDrink,
   setTotalCoins,
   coinList,
-  setCoinList
+  setCoinList,
+  drinks,
+  setDrinks,
+  coinsBox,
+  setCoinsBox
 }) => {
 
-  const storedDrinks = localStorage.getItem("drinks");
-
-  // se o objeto de moedas existir, use-o. Se não, use o objeto de moedas padrão.
-  const drinks = storedDrinks ? JSON.parse(storedDrinks) : defaultDrinks;
-
-  const updateDrinksInLocalStorage = () => {
-    localStorage.setItem("drinks", JSON.stringify(drinks));
-  };
-
-  const retirarQuant = () => {
-    drinks.forEach((drink) => {
+  const retirarQuant = async () => {
+    const updatedDrinks = drinks.map((drink) => {
       if (selectedDrink && selectedDrink.name === drink.name) {
         if (selectedDrink.quant !== 0) {
-          drink.quant = selectedDrink.quant - 1;
-          updateDrinksInLocalStorage();
+          return { ...drink, quant: selectedDrink.quant - 1 };
         }
       }
+      return drink;
     });
+
+    try {
+      await axios.post("https://localhost:7280/Drinks/PostDrinks", updatedDrinks);
+
+      setDrinks(updatedDrinks);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const [coinsBox, setCoinsBox] = useState([]);
+  useEffect(() => {
+    // Função assíncrona para obter os dados do moedeiro da API
+    const fetchDrinks = async () => {
+      try {
+        const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
+        if (response.data.length <= 0) {
+          defaultDrinks.forEach(async (drink) => {
+            try {
+              await axios.post("https://localhost:7280/Drinks/PostDrinks", drink);
+              console.log('Enviado:', JSON.stringify(drink));
+            } catch (error) {
+              console.error('Erro ao enviar:', JSON.stringify(drink));
+              console.error(error);
+            }
+          });
+        }
+        setDrinks(response.data || "");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    // Chamar a função para obter os dados do moedeiro ao montar o componente
+    fetchDrinks();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchCoinsBox = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7280/Coins/GetCoinsBox"
+        );
+        setCoinsBox(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCoinsBox();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const troco = async () => {
     const updatedCoinsBox = coinsBox.map((coin) => {
@@ -220,7 +264,6 @@ const Info = ({
       console.error(error);
     }
   };
-  
   
   
   

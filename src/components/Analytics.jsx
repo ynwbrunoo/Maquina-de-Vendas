@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
@@ -45,15 +45,6 @@ const Analytics = () => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
-    fetchStoredDadosDiaMessages();
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
-    fetchStoredDadosMesMessages();
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
-    fetchStoredDadosAnoMessages();
-  }, []);
 
   const [chartDataByYear, setChartDataByYear] = useState({});
   const [chartDataByMonthAndYear, setChartDataByMonthAndYear] = useState({});
@@ -470,195 +461,194 @@ const Analytics = () => {
       },
     });
   };
-  if (
-    storedDadosAnoMessages.length > 0 &&
-    storedDadosMesMessages.length > 0 &&
-    storedDadosDiaMessages.length > 0
-  ) {
-    return (
-      <div className="history">
-        <div className="log">
-          <button
-            onClick={() => {
-              handleModalOpen();
-              fetchStoredDadosAnoMessages();
-              fetchStoredDadosDiaMessages();
-              fetchStoredDadosMesMessages();
-            }}
-          >
-            <img
-              src="https://flaticons.net/icon.php?slug_category=user-interface&slug_icon=data-analysis"
-              alt="Análise"
-            />{" "}
-            Análise
-          </button>
-          {showModal ? (
-            <Modal>
-              <div className="buttons">
-                <button onClick={() => setShowModal(false)}>Fechar</button>
+  return (
+    <div className="history">
+      <div className="log">
+        <button
+          onClick={() => {
+            handleModalOpen();
+            fetchStoredDadosAnoMessages();
+            fetchStoredDadosDiaMessages();
+            fetchStoredDadosMesMessages();
+          }}
+        >
+          <img
+            src="https://flaticons.net/icon.php?slug_category=user-interface&slug_icon=data-analysis"
+            alt="Análise"
+          />{" "}
+          Análise
+        </button>
+        {showModal && (
+          <Modal>
+            <div className="buttons">
+              <button onClick={() => setShowModal(false)}>Fechar</button>
+            </div>
+            <div className="historico">
+              <div className="title">
+                <h1>Atividade</h1>
               </div>
-              <div className="historico">
-                <div className="title">
-                  <h1>Atividade</h1>
-                </div>
-                <div className="atividade">
+              <div className="atividade">
+                {storedDadosAnoMessages.length > 0 && storedDadosMesMessages.length > 0 && storedDadosDiaMessages.length > 0 ? (
                   <div className="filtrar">
-                    <h2>Filtrar</h2>
-                    <select
-                      name="anos"
-                      id="anos"
-                      onChange={() => handleAnosValue()}
-                    >
-                      <option value="">Selecione o Ano</option>
-                      {storedDadosAnoMessages.reverse().map((data) => {
-                        if (!renderedDate.has(data.year)) {
-                          renderedDate.add(data.year);
-                          return (
-                            <option key={data.year} value={data.year}>
-                              {data.year}
-                            </option>
-                          );
-                        }
-                        return null;
-                      })}
-                    </select>
-
-                    <select
-                      name="meses"
-                      id="meses"
-                      disabled
-                      onChange={() => handleMesesValue()}
-                    >
-                      <option value="">Selecione o Mês</option>
-                      {sortedDadosMesMessages.map((data) => {
-                        if (!renderedDate.has(data.month)) {
-                          renderedDate.add(data.month);
-                          return (
-                            <option key={data.month} value={data.month}>
-                              {getMonthName(data.month)}
-                            </option>
-                          );
-                        }
-                        return null;
-                      })}
-                    </select>
-
-                    <select
-                      name="dias"
-                      id="dias"
-                      disabled
-                      onChange={() => handleDiasValue()}
-                    >
-                      <option value="">Selecione o Dia</option>
-                      {sortedDadosDiaMessages.map((data) => {
-                        if (!renderedDate.has(data.day)) {
-                          renderedDate.add(data.day);
-                          return (
-                            <option key={data.day} value={data.day}>
-                              {data.day}
-                            </option>
-                          );
-                        }
-                        return null;
-                      })}
-                    </select>
-                    <button onClick={() => handleCleanValues()}>Limpar</button>
-                  </div>
-                  <div className="graficos">
-                    {(() => {
-                      if (
-                        document.getElementById("dias") &&
-                        document.getElementById("dias").value !== ""
-                      ) {
-                        const selectedDay =
-                          document.getElementById("dias").value;
-                        const selectedMonth =
-                          document.getElementById("meses").value;
-                        const selectedYear =
-                          document.getElementById("anos").value;
-
-                        const filteredChartData =
-                          chartDataByDayAndMonthAndYear[selectedYear][
-                            selectedMonth
-                          ][selectedDay];
-
+                    <div className="filtrar">
+                  <h2>Filtrar</h2>
+                  <select
+                    name="anos"
+                    id="anos"
+                    onChange={() => handleAnosValue()}
+                  >
+                    <option value="">Selecione o Ano</option>
+                    {storedDadosAnoMessages.reverse().map((data) => {
+                      if (!renderedDate.has(data.year)) {
+                        renderedDate.add(data.year);
                         return (
-                          <>
-                            <div style={{ width: 700 }}>
-                              <h3>{`Dia ${selectedDay}`}</h3>
-                              <LineChart
-                                chartDadosMessages={filteredChartData}
-                                chartOptions={chartOptions}
-                              />
-                            </div>
-                          </>
-                        );
-                      } else if (
-                        document.getElementById("meses") &&
-                        document.getElementById("meses").value !== ""
-                      ) {
-                        const selectedMonth =
-                          document.getElementById("meses").value;
-                        const selectedYear =
-                          document.getElementById("anos").value;
-
-                        const filteredChartData =
-                          chartDataByMonthAndYear[selectedYear][selectedMonth];
-
-                        return (
-                          <>
-                            <div style={{ width: 700 }}>
-                              <h3>{`${getMonthName(selectedMonth)}`}</h3>
-                              <LineChart
-                                chartDadosMessages={filteredChartData}
-                                chartOptions={chartOptions}
-                              />
-                            </div>
-                          </>
-                        );
-                      } else if (
-                        document.getElementById("anos") &&
-                        document.getElementById("anos").value !== ""
-                      ) {
-                        const selectedYear =
-                          document.getElementById("anos").value;
-
-                        const filteredChartData = chartDataByYear[selectedYear];
-
-                        return (
-                          <>
-                            <div style={{ width: 700 }}>
-                              <h3>{`${selectedYear}`}</h3>
-                              <LineChart
-                                chartDadosMessages={filteredChartData}
-                                chartOptions={chartOptions}
-                              />
-                            </div>
-                          </>
-                        );
-                      } else {
-                        return (
-                          <>
-                            <div style={{ width: 700 }}>
-                              <h3>{`-`}</h3>
-                              <LineChart
-                                chartDadosMessages={chartDataDefault}
-                                chartOptions={chartOptionsDefault}
-                              />
-                            </div>
-                          </>
+                          <option key={data.year} value={data.year}>
+                            {data.year}
+                          </option>
                         );
                       }
-                    })()}
-                  </div>
+                      return null;
+                    })}
+                  </select>
+
+                  <select
+                    name="meses"
+                    id="meses"
+                    disabled
+                    onChange={() => handleMesesValue()}
+                  >
+                    <option value="">Selecione o Mês</option>
+                    {sortedDadosMesMessages.map((data) => {
+                      if (!renderedDate.has(data.month)) {
+                        renderedDate.add(data.month);
+                        return (
+                          <option key={data.month} value={data.month}>
+                            {getMonthName(data.month)}
+                          </option>
+                        );
+                      }
+                      return null;
+                    })}
+                  </select>
+
+                  <select
+                    name="dias"
+                    id="dias"
+                    disabled
+                    onChange={() => handleDiasValue()}
+                  >
+                    <option value="">Selecione o Dia</option>
+                    {sortedDadosDiaMessages.map((data) => {
+                      if (!renderedDate.has(data.day)) {
+                        renderedDate.add(data.day);
+                        return (
+                          <option key={data.day} value={data.day}>
+                            {data.day}
+                          </option>
+                        );
+                      }
+                      return null;
+                    })}
+                  </select>
+                  <button onClick={() => handleCleanValues()}>Limpar</button>
                 </div>
+                <div className="graficos">
+                  {(() => {
+                    if (
+                      document.getElementById("dias") &&
+                      document.getElementById("dias").value !== ""
+                    ) {
+                      const selectedDay = document.getElementById("dias").value;
+                      const selectedMonth =
+                        document.getElementById("meses").value;
+                      const selectedYear =
+                        document.getElementById("anos").value;
+
+                      const filteredChartData =
+                        chartDataByDayAndMonthAndYear[selectedYear][
+                          selectedMonth
+                        ][selectedDay];
+
+                      return (
+                        <>
+                          <div style={{ width: 700 }}>
+                            <h3>{`Dia ${selectedDay}`}</h3>
+                            <LineChart
+                              chartDadosMessages={filteredChartData}
+                              chartOptions={chartOptions}
+                            />
+                          </div>
+                        </>
+                      );
+                    } else if (
+                      document.getElementById("meses") &&
+                      document.getElementById("meses").value !== ""
+                    ) {
+                      const selectedMonth =
+                        document.getElementById("meses").value;
+                      const selectedYear =
+                        document.getElementById("anos").value;
+
+                      const filteredChartData =
+                        chartDataByMonthAndYear[selectedYear][selectedMonth];
+
+                      return (
+                        <>
+                          <div style={{ width: 700 }}>
+                            <h3>{`${getMonthName(selectedMonth)}`}</h3>
+                            <LineChart
+                              chartDadosMessages={filteredChartData}
+                              chartOptions={chartOptions}
+                            />
+                          </div>
+                        </>
+                      );
+                    } else if (
+                      document.getElementById("anos") &&
+                      document.getElementById("anos").value !== ""
+                    ) {
+                      const selectedYear =
+                        document.getElementById("anos").value;
+
+                      const filteredChartData = chartDataByYear[selectedYear];
+
+                      return (
+                        <>
+                          <div style={{ width: 700 }}>
+                            <h3>{`${selectedYear}`}</h3>
+                            <LineChart
+                              chartDadosMessages={filteredChartData}
+                              chartOptions={chartOptions}
+                            />
+                          </div>
+                        </>
+                      );
+                    } else {
+                      return (
+                        <>
+                          <div style={{ width: 700 }}>
+                            <h3>{`-`}</h3>
+                            <LineChart
+                              chartDadosMessages={chartDataDefault}
+                              chartOptions={chartOptionsDefault}
+                            />
+                          </div>
+                        </>
+                      );
+                    }
+                  })()}
+                </div>
+                  </div>
+                ) : (
+                  <h2>NENHUMA ATIVIDADE</h2>
+                )}
               </div>
-            </Modal>
-          ) : null}
-        </div>
+            </div>
+          </Modal>
+        )}
       </div>
-    );
-  }
-};
+    </div>
+  );
+}
 
 export default Analytics;

@@ -1,9 +1,11 @@
-export function logAndStore(message) {
-    let storedLogMessages = JSON.parse(localStorage.getItem('logMessages')) || [];
-  
-    storedLogMessages.push(message);
-  
-    localStorage.setItem('logMessages', JSON.stringify(storedLogMessages));
-  
+import axios from 'axios';
+
+export async function logAndStore(message) {
+  try {
+    await axios.post('https://localhost:7280/LogMessages/PostLogMessages', { message });
+
     console.log(message);
+  } catch (error) {
+    console.error(error);
+  }
 }

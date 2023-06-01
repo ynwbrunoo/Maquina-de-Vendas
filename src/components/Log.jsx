@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 import axios from "axios";
 
@@ -24,14 +24,7 @@ const Log = () => {
       console.error(error);
     }
   };
-
   
-
-  useEffect(() => {
-    // Chamar a função para obter os dados do moedeiro ao montar o componente
-    fetchLogMessages();
-  }, []);
-  if (logMessages.length > 0) {
     return (
       <div className="history">
         <div className="log">
@@ -53,20 +46,23 @@ const Log = () => {
               </div>
               <div className="historico">
                 <h2>Histórico:</h2>
-                <div className="lista">
-                  <ul>
-                    {logMessages.reverse().map((message) => (
-                      <li key={message.id}>{message.message}</li>
-                    ))}
-                  </ul>
+                {logMessages !== null && logMessages.length > 0 ? (
+                  <div className="lista">
+                    <ul>
+                      {logMessages.reverse().map((message) => (
+                        <li key={message.id}>{message.message}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <h2>NENHUM RESULTADO</h2>
+                )}
                 </div>
-              </div>
             </Modal>
           ) : null}
         </div>
       </div>
     );
   }
-};
 
 export default Log;

@@ -3,9 +3,8 @@ import { logAndStore } from './log';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Coin = ({ setTotalCoins, setCoinList}) => {
+const Coin = ({ setTotalCoins, setCoinList, coinsBox, setCoinsBox}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [coinsBox, setCoinsBox] = useState([]);
 
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
@@ -23,6 +22,7 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
     };
 
     fetchCoinsBox();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
