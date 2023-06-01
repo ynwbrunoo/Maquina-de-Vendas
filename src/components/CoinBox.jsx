@@ -12,7 +12,15 @@ const CoinBox = () => {
           "https://localhost:7280/Coins/GetCoinsBox"
         );
         if (response.data.length <= 0) {
-          await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
+          defaultCoins.forEach(async (coin) => {
+            try {
+              await axios.post("https://localhost:7280/Coins/PostCoinsBox", coin);
+              console.log('Enviado:', JSON.stringify(coin));
+            } catch (error) {
+              console.error('Erro ao enviar:', JSON.stringify(coin));
+              console.error(error);
+            }
+          });
         }
         setCoinsBox(response.data);
       } catch (error) {

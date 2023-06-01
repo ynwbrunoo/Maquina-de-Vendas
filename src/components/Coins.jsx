@@ -59,7 +59,7 @@ const Coin = ({ setTotalCoins, setCoinList}) => {
         <h2>Introduza moedas</h2>
       </div>
       <div className="moedas">
-        {coinsBox.map((coin) => {
+        {coinsBox.sort((a, b) => a.moeda - b.moeda).map((coin) => {
           if(coin.moeda >= 100) {
             return (
               <button key={coin.id} onClick={() => handleCoinClick(coin.moeda)}>{coin.moeda / 100} EUR</button>
