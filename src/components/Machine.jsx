@@ -28,9 +28,15 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrink
         const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
         if (response.data.length <= 0) {
           await axios.post("https://localhost:7280/Drinks/PostDrinks", defaultDrinks);
+          const response = await axios.get(
+            "https://localhost:7280/Drinks/GetDrinks"
+          );
+          setIsLoading(false);
+          setDrinks(response.data);
+        } else {
+          setIsLoading(false);
+          setDrinks(response.data);
         }
-        setIsLoading(false);
-        setDrinks(response.data || defaultDrinks);
       } catch (error) {
         setIsLoading(false);
         console.error(error);

@@ -14,12 +14,19 @@ const CoinBox = ({coinsBox, setCoinsBox}) => {
         if (response.data.length <= 0) {
             try {
               await axios.post("https://localhost:7280/Coins/PostCoinsBox", defaultCoins);
+              const response = await axios.get(
+                "https://localhost:7280/Coins/GetCoinsBox"
+              );
+              setIsLoading(false);
+              setCoinsBox(response.data);
             } catch (error) {
+              setIsLoading(false);
               console.error(error);
             }
-        }
+        } else {
         setIsLoading(false);
         setCoinsBox(response.data);
+        }
       } catch (error) {
         console.error(error);
         setIsLoading(false);
