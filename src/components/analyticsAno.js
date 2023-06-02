@@ -1,7 +1,12 @@
-export function StoreAnoAnalytics(message) {
-    let storedDadosAnoMessages = JSON.parse(localStorage.getItem('dadosAnoMessages')) || [];
-  
-    storedDadosAnoMessages.push(...message);
-  
-    localStorage.setItem('dadosAnoMessages', JSON.stringify(storedDadosAnoMessages));
+import axios from "axios";
+
+export async function StoreAnoAnalytics(message) {
+  try {
+    await axios.post("https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages", {
+      ...message,
+    });
+    console.log(...message);
+  } catch (error) {
+    console.error(error);
+  }
 }
