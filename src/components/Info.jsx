@@ -1,9 +1,6 @@
 import defaultDrinks from "./defaultDrinks";
 import { toast } from "react-toastify";
 import { logAndStore } from "./log";
-import { StoreMesAnalytics } from "./analyticsMes";
-import { StoreAnoAnalytics } from "./analyticsAno";
-import { StoreDiaAnalytics } from "./analyticsDia";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -17,9 +14,8 @@ const Info = ({
   drinks,
   setDrinks,
   coinsBox,
-  setCoinsBox
+  setCoinsBox,
 }) => {
-
   const retirarQuant = async () => {
     const updatedDrinks = drinks.map((drink) => {
       if (selectedDrink && selectedDrink.name === drink.name) {
@@ -31,7 +27,10 @@ const Info = ({
     });
 
     try {
-      await axios.post("https://localhost:7280/Drinks/PostDrinks", updatedDrinks);
+      await axios.post(
+        "https://localhost:7280/Drinks/PostDrinks",
+        updatedDrinks
+      );
 
       setDrinks(updatedDrinks);
     } catch (error) {
@@ -43,14 +42,19 @@ const Info = ({
     // Função assíncrona para obter os dados do moedeiro da API
     const fetchDrinks = async () => {
       try {
-        const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
+        const response = await axios.get(
+          "https://localhost:7280/Drinks/GetDrinks"
+        );
         if (response.data.length <= 0) {
           defaultDrinks.forEach(async (drink) => {
             try {
-              await axios.post("https://localhost:7280/Drinks/PostDrinks", drink);
-              console.log('Enviado:', JSON.stringify(drink));
+              await axios.post(
+                "https://localhost:7280/Drinks/PostDrinks",
+                drink
+              );
+              console.log("Enviado:", JSON.stringify(drink));
             } catch (error) {
-              console.error('Erro ao enviar:', JSON.stringify(drink));
+              console.error("Erro ao enviar:", JSON.stringify(drink));
               console.error(error);
             }
           });
@@ -60,10 +64,10 @@ const Info = ({
         console.error(error);
       }
     };
-  
+
     // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchDrinks();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -89,7 +93,7 @@ const Info = ({
     };
 
     fetchMessages();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -105,25 +109,30 @@ const Info = ({
     };
 
     fetchCoinsBox();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const troco = async () => {
     const updatedCoinsBox = coinsBox.map((coin) => {
-      if (
-        (total / 100 - selectedDrink.price).toFixed(2) >= coin.moeda / 100
-      ) {
+      if ((total / 100 - selectedDrink.price).toFixed(2) >= coin.moeda / 100) {
         const updatedQuantidade = coin.quantidade - 1;
         const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
 
-        return { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal };
+        return {
+          ...coin,
+          quantidade: updatedQuantidade,
+          valorTotal: updatedValorTotal,
+        };
       }
       return coin;
     });
 
     try {
       console.log(updatedCoinsBox);
-      await axios.post("https://localhost:7280/Coins/PostCoinsBox", updatedCoinsBox);
+      await axios.post(
+        "https://localhost:7280/Coins/PostCoinsBox",
+        updatedCoinsBox
+      );
 
       setCoinsBox(updatedCoinsBox);
     } catch (error) {
@@ -131,12 +140,11 @@ const Info = ({
     }
   };
 
-
   const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
   const [dadosMesMessages, setDadosMesMessages] = useState([]);
   const [dadosDiaMessages, setDadosDiaMessages] = useState([]);
 
-  const analytics = (price) => {
+  const analytics = async (price) => {
     const now = new Date();
     const day = now.getDate();
     const month = now.getMonth() + 1;
@@ -144,103 +152,110 @@ const Info = ({
     const hour = now.getHours();
     let bool = false;
 
-    if (dadosDiaMessages !== null) {
+    console.log(dadosDiaMessages);
+    console.log(dadosMesMessages);
+    console.log(dadosAnoMessages);
+
+    if (dadosDiaMessages.length > 0) {
       bool = false;
-      dadosDiaMessages.forEach((dadoDia) => {
-        if (dadoDia.hour === hour && dadoDia.day === now.getDate() && dadoDia.month === now.getMonth() + 1 && dadoDia.year === now.getFullYear()) {
+      dadosDiaMessages.forEach(async (dadoDia) => {
+        if (
+          dadoDia.hour === hour &&
+          dadoDia.day === now.getDate() &&
+          dadoDia.month === now.getMonth() + 1 &&
+          dadoDia.year === now.getFullYear()
+        ) {
           dadoDia.price = Number(dadoDia.price);
           dadoDia.price += selectedDrink.price;
-          dadoDia.price = (dadoDia.price).toFixed(2);
-          // updateDadosDiaInLocalStorage();
+          dadoDia.price = dadoDia.price.toFixed(2);
+
+          await axios.post(
+            "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
+            [{ hour: dadoDia.hour, day: dadoDia.day, price: dadoDia.price, month: dadoDia.month, year: dadoDia.year }]
+          );
+
           bool = true;
-        } 
+        }
         if (bool === false) {
-          StoreDiaAnalytics([
-            {
-              hour: hour,
-              day: day,
-              price: price,
-              month: month,
-              year: year,
-            },
-          ]);
+          await axios.post(
+            "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
+            [{ hour: hour, day: day, price: price, month: month, year: year }]
+          );
           bool = true;
         }
       });
     } else {
-      StoreDiaAnalytics([
-        {
-          hour: hour,
-          day: day,
-          price: price,
-          month: month,
-          year: year,
-        },
-      ]);
+      await axios.post(
+        "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
+        [{ hour: hour, day: day, price: price, month: month, year: year }]
+      );
     }
 
-    if (dadosMesMessages !== null) {
+    if (dadosMesMessages.length > 0) {
       bool = false;
-      dadosMesMessages.forEach((dadoMes) => {
-        if (dadoMes.day === now.getDate() && dadoMes.month === now.getMonth() + 1 && dadoMes.year === now.getFullYear()) {
+      dadosMesMessages.forEach( async (dadoMes) => {
+        if (
+          dadoMes.day === now.getDate() &&
+          dadoMes.month === now.getMonth() + 1 &&
+          dadoMes.year === now.getFullYear()
+        ) {
           dadoMes.price = Number(dadoMes.price);
           dadoMes.price += selectedDrink.price;
-          dadoMes.price = (dadoMes.price).toFixed(2);
-          // updateDadosMesInLocalStorage();
+          dadoMes.price = dadoMes.price.toFixed(2);
+          
+          await axios.post(
+            "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
+            [{ day: dadoMes.day, price: dadoMes.price, month: dadoMes.month, year: dadoMes.year }]
+          );
+          
           bool = true;
-        } 
+        }
         if (bool === false) {
-          StoreMesAnalytics([
-            {
-              day: day,
-              price: price,
-              month: month,
-              year: year,
-            },
-          ]);
+          await axios.post(
+            "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
+            [{ day: day, price: price, month: month, year: year }]
+          );
           bool = true;
         }
       });
     } else {
-      StoreMesAnalytics([
-        {
-          day: day,
-          price: price,
-          month: month,
-          year: year,
-        },
-      ]);
+      await axios.post(
+        "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
+        [{ day: day, price: price, month: month, year: year }]
+      );
     }
 
-    if (dadosAnoMessages !== null) {
+    if (dadosAnoMessages.length > 0) {
       bool = false;
-      dadosAnoMessages.forEach((dadoAno) => {
-        if (dadoAno.month === now.getMonth() + 1 && dadoAno.year === now.getFullYear()) {
+      dadosAnoMessages.forEach( async (dadoAno) => {
+        if (
+          dadoAno.month === now.getMonth() + 1 &&
+          dadoAno.year === now.getFullYear()
+        ) {
           dadoAno.price = Number(dadoAno.price);
           dadoAno.price += selectedDrink.price;
-          dadoAno.price = (dadoAno.price).toFixed(2);
-          // updateDadosAnoInLocalStorage();
+          dadoAno.price = dadoAno.price.toFixed(2);
+          
+          await axios.post(
+            "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
+            [{ price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }]
+          );
+
           bool = true;
-        } 
-        if(bool === false) {
-          StoreAnoAnalytics([
-            {
-              price: price,
-              month: month,
-              year: year,
-            },
-          ]);
+        }
+        if (bool === false) {
+          await axios.post(
+            "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
+            [{ price: price, month: month, year: year }]
+          );
           bool = true;
         }
       });
     } else {
-      StoreAnoAnalytics([
-        {
-          price: price,
-          month: month,
-          year: year,
-        },
-      ]);
+      await axios.post(
+        "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
+        [{ price: price, month: month, year: year }]
+      );
     }
   };
 
@@ -248,29 +263,32 @@ const Info = ({
     try {
       const updatedCoinsBoxList = coinsBox.map((coin) => {
         const foundCoin = coinList.find((c) => c === coin.moeda);
-  
-        const updatedQuantidade = foundCoin ? coin.quantidade + 1 : coin.quantidade;
+
+        const updatedQuantidade = foundCoin
+          ? coin.quantidade + 1
+          : coin.quantidade;
         const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
-  
-        return { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal };
+
+        return {
+          ...coin,
+          quantidade: updatedQuantidade,
+          valorTotal: updatedValorTotal,
+        };
       });
-  
+
       console.log("Updated CoinsBoxList:", updatedCoinsBoxList);
-  
-      await axios.post("https://localhost:7280/Coins/PostCoinsBox", updatedCoinsBoxList);
-  
+
+      await axios.post(
+        "https://localhost:7280/Coins/PostCoinsBox",
+        updatedCoinsBoxList
+      );
+
       setCoinsBox(updatedCoinsBoxList);
       setCoinList(new Array(coinList.length).fill(0));
     } catch (error) {
       console.error(error);
     }
   };
-  
-  
-  
-  
-  
-  
 
   const getCurrentTime = () => {
     const date = new Date();
