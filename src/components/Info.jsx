@@ -5,7 +5,7 @@ import { StoreMesAnalytics } from "./analyticsMes";
 import { StoreAnoAnalytics } from "./analyticsAno";
 import { StoreDiaAnalytics } from "./analyticsDia";
 import axios from "axios";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const Info = ({
   total,
@@ -67,6 +67,32 @@ const Info = ({
   }, []);
 
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response2 = await axios.get(
+          "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+        );
+        setDadosAnoMessages(response2.data);
+
+        const response3 = await axios.get(
+          "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+        );
+        setDadosMesMessages(response3.data);
+
+        const response4 = await axios.get(
+          "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+        );
+        setDadosDiaMessages(response4.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMessages();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const fetchCoinsBox = async () => {
       try {
         const response = await axios.get(
@@ -96,6 +122,7 @@ const Info = ({
     });
 
     try {
+      console.log(updatedCoinsBox);
       await axios.post("https://localhost:7280/Coins/PostCoinsBox", updatedCoinsBox);
 
       setCoinsBox(updatedCoinsBox);
@@ -105,35 +132,9 @@ const Info = ({
   };
 
 
-  const storedDadosDiaMessages = localStorage.getItem("dadosDiaMessages");
-
-  const dadosDiaMessages = storedDadosDiaMessages
-    ? JSON.parse(storedDadosDiaMessages)
-    : null;
-
-  const updateDadosDiaInLocalStorage = () => {
-    localStorage.setItem("dadosDiaMessages", JSON.stringify(dadosDiaMessages));
-  };
-
-  const storedDadosMesMessages = localStorage.getItem("dadosMesMessages");
-
-  const dadosMesMessages = storedDadosMesMessages
-    ? JSON.parse(storedDadosMesMessages)
-    : null;
-
-  const updateDadosMesInLocalStorage = () => {
-    localStorage.setItem("dadosMesMessages", JSON.stringify(dadosMesMessages));
-  };
-
-  const storedDadosAnoMessages = localStorage.getItem("dadosAnoMessages");
-
-  const dadosAnoMessages = storedDadosAnoMessages
-    ? JSON.parse(storedDadosAnoMessages)
-    : null;
-
-  const updateDadosAnoInLocalStorage = () => {
-    localStorage.setItem("dadosAnoMessages", JSON.stringify(dadosAnoMessages));
-  };
+  const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
+  const [dadosMesMessages, setDadosMesMessages] = useState([]);
+  const [dadosDiaMessages, setDadosDiaMessages] = useState([]);
 
   const analytics = (price) => {
     const now = new Date();
@@ -150,7 +151,7 @@ const Info = ({
           dadoDia.price = Number(dadoDia.price);
           dadoDia.price += selectedDrink.price;
           dadoDia.price = (dadoDia.price).toFixed(2);
-          updateDadosDiaInLocalStorage();
+          // updateDadosDiaInLocalStorage();
           bool = true;
         } 
         if (bool === false) {
@@ -185,7 +186,7 @@ const Info = ({
           dadoMes.price = Number(dadoMes.price);
           dadoMes.price += selectedDrink.price;
           dadoMes.price = (dadoMes.price).toFixed(2);
-          updateDadosMesInLocalStorage();
+          // updateDadosMesInLocalStorage();
           bool = true;
         } 
         if (bool === false) {
@@ -218,7 +219,7 @@ const Info = ({
           dadoAno.price = Number(dadoAno.price);
           dadoAno.price += selectedDrink.price;
           dadoAno.price = (dadoAno.price).toFixed(2);
-          updateDadosAnoInLocalStorage();
+          // updateDadosAnoInLocalStorage();
           bool = true;
         } 
         if(bool === false) {
