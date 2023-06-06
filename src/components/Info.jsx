@@ -170,9 +170,14 @@ const Info = ({
           dadoDia.price = dadoDia.price.toFixed(2);
 
           await axios.post(
-            "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
-            [{ hour: dadoDia.hour, day: dadoDia.day, price: dadoDia.price, month: dadoDia.month, year: dadoDia.year }]
+            `https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages/${dadoDia.id}`,
+            { hour: dadoDia.hour, day: dadoDia.day, price: dadoDia.price, month: dadoDia.month, year: dadoDia.year }
           );
+  
+          const response4 = await axios.get(
+            "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+          );
+          setDadosDiaMessages(response4.data);
 
           bool = true;
         }
@@ -181,6 +186,11 @@ const Info = ({
             "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
             [{ hour: hour, day: day, price: price, month: month, year: year }]
           );
+
+          const response4 = await axios.get(
+            "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+          );
+          setDadosDiaMessages(response4.data);
           bool = true;
         }
       });
@@ -189,6 +199,11 @@ const Info = ({
         "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
         [{ hour: hour, day: day, price: price, month: month, year: year }]
       );
+
+      const response4 = await axios.get(
+        "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+      );
+      setDadosDiaMessages(response4.data);
     }
 
     if (dadosMesMessages.length > 0) {
@@ -204,9 +219,14 @@ const Info = ({
           dadoMes.price = dadoMes.price.toFixed(2);
           
           await axios.post(
-            "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
-            [{ day: dadoMes.day, price: dadoMes.price, month: dadoMes.month, year: dadoMes.year }]
+            `https://localhost:7280/DadosMesMessages/PostDadosMesMessages/${dadoMes.id}`,
+            { day: dadoMes.day, price: dadoMes.price, month: dadoMes.month, year: dadoMes.year }
           );
+
+          const response3 = await axios.get(
+            "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+          );
+          setDadosMesMessages(response3.data);
           
           bool = true;
         }
@@ -215,6 +235,11 @@ const Info = ({
             "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
             [{ day: day, price: price, month: month, year: year }]
           );
+
+          const response3 = await axios.get(
+            "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+          );
+          setDadosMesMessages(response3.data);
           bool = true;
         }
       });
@@ -223,6 +248,11 @@ const Info = ({
         "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
         [{ day: day, price: price, month: month, year: year }]
       );
+
+      const response3 = await axios.get(
+        "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+      );
+      setDadosMesMessages(response3.data);
     }
 
     if (dadosAnoMessages.length > 0) {
@@ -236,10 +266,16 @@ const Info = ({
           dadoAno.price += selectedDrink.price;
           dadoAno.price = dadoAno.price.toFixed(2);
           
+          console.log("nigga1")
           await axios.post(
-            "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
-            [{ price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }]
+            `https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages/${dadoAno.id}`,
+            { price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }
           );
+
+          const response2 = await axios.get(
+            "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+          );
+          setDadosAnoMessages(response2.data);
 
           bool = true;
         }
@@ -248,6 +284,11 @@ const Info = ({
             "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
             [{ price: price, month: month, year: year }]
           );
+
+          const response2 = await axios.get(
+            "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+          );
+          setDadosAnoMessages(response2.data);
           bool = true;
         }
       });
@@ -256,6 +297,11 @@ const Info = ({
         "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
         [{ price: price, month: month, year: year }]
       );
+
+      const response2 = await axios.get(
+        "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+      );
+      setDadosAnoMessages(response2.data);
     }
   };
 
