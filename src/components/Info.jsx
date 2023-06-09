@@ -41,10 +41,6 @@ const Info = ({
     setDrinks(updatedDrinks);
   };
   
-  
-  
-  
-
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
     const fetchDrinks = async () => {
@@ -59,9 +55,7 @@ const Info = ({
                 "https://localhost:7280/Drinks/PostDrinks",
                 drink
               );
-              console.log("Enviado:", JSON.stringify(drink));
             } catch (error) {
-              console.error("Erro ao enviar:", JSON.stringify(drink));
               console.error(error);
             }
           });
@@ -119,7 +113,7 @@ const Info = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const troco = async () => {
+  const addTroco = async () => {
     const updatedCoinsBox = await Promise.all(coinsBox.map( async (coin) => {
       if ((total / 100 - selectedDrink.price).toFixed(2) >= coin.moeda / 100) {
         const updatedQuantidade = coin.quantidade - 1;
@@ -146,13 +140,40 @@ const Info = ({
     } catch (error) {
       console.error(error);
     }
+
+    try {
+      const updatedCoinsBoxList = await Promise.all(updatedCoinsBox.map( async (coin) => {
+        const foundCoin = coinList.find((c) => c === coin.moeda);
+
+        const updatedQuantidade = foundCoin
+          ? coin.quantidade + 1
+          : coin.quantidade;
+        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
+        const id = coin.id;
+
+        await axios.post(
+          `https://localhost:7280/Coins/PostCoinsBox/${id}`,
+          { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal }
+        );
+
+        return {
+          ...coin,
+          quantidade: updatedQuantidade,
+          valorTotal: updatedValorTotal,
+        };
+      }));
+      setCoinsBox(updatedCoinsBoxList);
+      setCoinList(new Array(coinList.length).fill(0));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const [dadosAnoMessages, setDadosAnoMessages] = useState([]);
   const [dadosMesMessages, setDadosMesMessages] = useState([]);
   const [dadosDiaMessages, setDadosDiaMessages] = useState([]);
 
-  const analytics = async (price) => {
+  const analyticsDia = async (price) => {
     const now = new Date();
     const day = now.getDate();
     const month = now.getMonth() + 1;
@@ -160,13 +181,9 @@ const Info = ({
     const hour = now.getHours();
     let bool = false;
 
-    console.log(dadosDiaMessages);
-    console.log(dadosMesMessages);
-    console.log(dadosAnoMessages);
-
     if (dadosDiaMessages.length > 0) {
       bool = false;
-      dadosDiaMessages.forEach(async (dadoDia) => {
+      await Promise.all(dadosDiaMessages.forEach(async (dadoDia) => {
         if (
           dadoDia.hour === hour &&
           dadoDia.day === now.getDate() &&
@@ -180,6 +197,7 @@ const Info = ({
           await axios.post(
             `https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages/${dadoDia.id}`,
             {
+              ...dadoDia,
               hour: dadoDia.hour,
               day: dadoDia.day,
               price: dadoDia.price,
@@ -207,7 +225,7 @@ const Info = ({
           setDadosDiaMessages(response4.data);
           bool = true;
         }
-      });
+      }));
     } else {
       await axios.post(
         "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
@@ -219,10 +237,18 @@ const Info = ({
       );
       setDadosDiaMessages(response4.data);
     }
+  };
+
+  const analyticsMes = async (price) => {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+    let bool = false;
 
     if (dadosMesMessages.length > 0) {
       bool = false;
-      dadosMesMessages.forEach(async (dadoMes) => {
+      await Promise.all(dadosMesMessages.forEach(async (dadoMes) => {
         if (
           dadoMes.day === now.getDate() &&
           dadoMes.month === now.getMonth() + 1 &&
@@ -235,6 +261,7 @@ const Info = ({
           await axios.post(
             `https://localhost:7280/DadosMesMessages/PostDadosMesMessages/${dadoMes.id}`,
             {
+              ...dadoMes,
               day: dadoMes.day,
               price: dadoMes.price,
               month: dadoMes.month,
@@ -261,7 +288,7 @@ const Info = ({
           setDadosMesMessages(response3.data);
           bool = true;
         }
-      });
+      }));
     } else {
       await axios.post(
         "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
@@ -273,10 +300,17 @@ const Info = ({
       );
       setDadosMesMessages(response3.data);
     }
+  }
+
+  const analyticsAno = async (price) => {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+    let bool = false;
 
     if (dadosAnoMessages.length > 0) {
       bool = false;
-      dadosAnoMessages.forEach(async (dadoAno) => {
+      await Promise.all(dadosAnoMessages.forEach(async (dadoAno) => {
         if (
           dadoAno.month === now.getMonth() + 1 &&
           dadoAno.year === now.getFullYear()
@@ -285,10 +319,9 @@ const Info = ({
           dadoAno.price += selectedDrink.price;
           dadoAno.price = dadoAno.price.toFixed(2);
 
-          console.log("nigga1");
           await axios.post(
             `https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages/${dadoAno.id}`,
-            { price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }
+            { ...dadoAno, price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }
           );
 
           const response2 = await axios.get(
@@ -310,7 +343,7 @@ const Info = ({
           setDadosAnoMessages(response2.data);
           bool = true;
         }
-      });
+      }));
     } else {
       await axios.post(
         "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
@@ -322,38 +355,7 @@ const Info = ({
       );
       setDadosAnoMessages(response2.data);
     }
-  };
-
-  const addMoney = async () => {
-    try {
-      const updatedCoinsBoxList = coinsBox.map((coin) => {
-        const foundCoin = coinList.find((c) => c === coin.moeda);
-
-        const updatedQuantidade = foundCoin
-          ? coin.quantidade + 1
-          : coin.quantidade;
-        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
-
-        return {
-          ...coin,
-          quantidade: updatedQuantidade,
-          valorTotal: updatedValorTotal,
-        };
-      });
-
-      console.log("Updated CoinsBoxList:", updatedCoinsBoxList);
-
-      await axios.post(
-        "https://localhost:7280/Coins/PostCoinsBox",
-        updatedCoinsBoxList
-      );
-
-      setCoinsBox(updatedCoinsBoxList);
-      setCoinList(new Array(coinList.length).fill(0));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }
 
   const getCurrentTime = () => {
     const date = new Date();
@@ -370,7 +372,6 @@ const Info = ({
   const handlePagar = () => {
     if (selectedDrink === null) {
       toast.error(`Selecione uma bebida!`, { autoClose: 3000 });
-      console.log(`Selecione uma bebida!`);
     } else if (selectedDrink.quant === 0) {
       logAndStore(`Já não há mais ${selectedDrink.name} - ${getCurrentTime()}`);
       toast.error(
@@ -386,11 +387,13 @@ const Info = ({
       toast.success(`Comprou uma ${selectedDrink.name} com sucesso!`, {
         autoClose: 3000,
       });
-      analytics(selectedDrink.price);
+      analyticsDia(selectedDrink.price);
+      analyticsMes(selectedDrink.price);
+      analyticsAno(selectedDrink.price);
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
-      addMoney();
+      addTroco();
     } else if (total / 100 > selectedDrink.price) {
       logAndStore(
         `Comprou uma ${selectedDrink.name} (${selectedDrink.price} EUR) com ${
@@ -408,12 +411,13 @@ const Info = ({
         ).toFixed(2)} EUR!`,
         { autoClose: 4000 }
       );
-      analytics(selectedDrink.price);
-      troco();
+      analyticsDia(selectedDrink.price);
+      analyticsMes(selectedDrink.price);
+      analyticsAno(selectedDrink.price);
+      addTroco();
       retirarQuant();
       setSelectedDrink(null);
       setTotalCoins(0);
-      addMoney();
     }
   };
 
