@@ -101,6 +101,28 @@ td {
   margin-top: 10px;
 }
 
+.historico .title {
+  margin-bottom: 60px;
+  margin-top: 10px;
+}
+
+.edit button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.edit button img:hover {
+  box-shadow: 0px 0px 5px 2px #8f8f8f;
+}
+
+.edit button img {
+  width: 40px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 5px 2px #000000;
+}
+
 .moedas {
   display: grid;
   grid-template-columns: repeat(3, auto);
@@ -233,10 +255,33 @@ td {
   width: 200px;
   height: auto;
   margin-bottom: 10px;
+  padding-bottom: 10px;
   transition: 0.4s;
   border-radius: 15px;
   cursor: not-allowed;
   background-color: rgb(117, 117, 117);
+}
+
+.input-drink {
+  background-color: transparent;
+  text-align: center;
+  border: none;
+  width: 100%;
+  outline: none;
+}
+
+.h2 {
+ font-size: 24px;
+ font-weight: bold;
+}
+
+.h3 {
+ font-size: 18.5px;
+ font-weight: bold;
+}
+
+.p {
+  font-size: 16px;
 }
 
 .image {
@@ -315,8 +360,6 @@ p {
 #modal div div {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
   height: 98%;
 }
 
@@ -335,12 +378,20 @@ p {
 
 #modal .buttons {
   height: auto;
+  display: flex;
+  align-items: end;
 }
 
 .atividade {
   display: flex !important;
   flex-direction: row !important;
   gap: 100px;
+}
+
+.atividade .filtrar2 {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center;
 }
 
 .filtrar {

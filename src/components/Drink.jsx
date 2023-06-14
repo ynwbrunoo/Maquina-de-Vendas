@@ -11,17 +11,18 @@ const Drink = ({ drink, onClick, totalCoins }) => {
     // Função assíncrona para obter os dados do moedeiro da API
     const fetchDrinks = async () => {
       try {
-        const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
+        const response = await axios.get(
+          "https://localhost:7280/Drinks/GetDrinks"
+        );
         setDrinks(response.data);
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchDrinks();
   }, []);
-  
 
   useEffect(() => {
     drinks.forEach((d) => {
@@ -37,9 +38,8 @@ const Drink = ({ drink, onClick, totalCoins }) => {
         document.getElementById(d.name).style.backgroundColor = "#757575";
         document.getElementById(d.name).style.cursor = "not-allowed";
       }
-      
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalCoins]);
 
   const handleOnClick = (drink) => {
@@ -98,28 +98,129 @@ const Drink = ({ drink, onClick, totalCoins }) => {
     document.getElementById(drink.name).setAttribute("data-selected", "true");
   };
 
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = async () => {
+    setIsEditing(false);
+    try {
+      const name = document.getElementById("editName").value;
+      const price = parseFloat(document.getElementById("editPrice").value);
+      const quant = parseInt(document.getElementById("editQuant").value);
+      const id = drink.id;
+
+      // Enviar a solicitação de atualização para a API
+      await axios.post(`https://localhost:7280/Drinks/PostDrinks/${id}`, {
+        ...drink,
+        name: name,
+        price: price,
+        quant: quant,
+      });
+
+      const fetchDrinks = async () => {
+        try {
+          const response = await axios.get(
+            "https://localhost:7280/Drinks/GetDrinks"
+          );
+          setDrinks(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchDrinks();
+    } catch (error) {
+      console.error(error);
+
+    }
+  };
+
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div
-      className={`bebida`}
-      id={drink.name}
-      onClick={() => handleOnClick(drink)}
-    >
-      <div className="name">
-        <h2>{drink.name}</h2>
+    <div>
+      <div
+        className={`bebida ${isEditing ? "edit-mode" : ""}`}
+        id={drink.name}
+        onClick={() => handleOnClick(drink)}
+        role="button"
+      >
+        <div className="name">
+          <h2>
+            {isEditing ? (
+              <input
+                className="input-drink h2"
+                id="editName"
+                type="text"
+                defaultValue={drink.name}
+              />
+            ) : (
+              drink.name
+            )}
+          </h2>
+        </div>
+        <div className="image">
+          <img src={drink.image} alt={drink.name} />
+        </div>
+        <div className="price">
+          <h3>
+            {isEditing ? (
+              <input
+                className="input-drink h3"
+                id="editPrice"
+                type="text"
+                defaultValue={drink.price.toFixed(2)}
+              />
+            ) : (
+              `${drink.price.toFixed(2)}`
+            )}
+            €
+          </h3>
+        </div>
+        <div className="quant">
+          {drink.quant === 0 ? (
+            <p style={{ color: "red" }}>
+              Quantidade:{" "}
+              {isEditing ? (
+                <input
+                  className="input-drink p"
+                  id="editQuant"
+                  type="text"
+                  defaultValue={drink.quant}
+                />
+              ) : (
+                `Esgotado`
+              )}
+            </p>
+          ) : (
+            <p>
+              Quantidade:{" "}
+              {isEditing ? (
+                <input
+                  className="input-drink p"
+                  id="editQuant"
+                  type="text"
+                  defaultValue={drink.quant}
+                />
+              ) : (
+                `${drink.quant}`
+              )}
+            </p>
+          )}
+        </div>
       </div>
-      <div className="image">
-        <img src={drink.image} alt={drink.name} />
-      </div>
-      <div className="price">
-        <h3>{(drink.price).toFixed(2)} €</h3>
-      </div>
-      <div className="quant">
-      {drink.quant === 0 ? (
-        <p style={{color: 'red'}}>Esgotado</p>
-      ) : (
-        <p>Quantidade: {drink.quant}</p>
-      )}
+      <div className="edit">
+        {isEditing ? (
+          <button onClick={handleSaveClick}>Salvar</button>
+        ) : (
+          <button onClick={handleEditClick}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/1038/1038547.png"
+              alt="Editar"
+            />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -4,8 +4,13 @@ import { logAndStore } from "./log";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrinks }) => {
-
+const Machine = ({
+  setSelectedDrink,
+  selectedDrink,
+  totalCoins,
+  drinks,
+  setDrinks,
+}) => {
   const getCurrentTime = () => {
     const date = new Date();
     const options = {
@@ -18,16 +23,20 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrink
     return `${date.toLocaleDateString("pt-PT", options)}`;
   };
 
-  
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
     const fetchDrinks = async () => {
       try {
-        const response = await axios.get('https://localhost:7280/Drinks/GetDrinks');
+        const response = await axios.get(
+          "https://localhost:7280/Drinks/GetDrinks"
+        );
         if (response.data.length <= 0) {
-          await axios.post("https://localhost:7280/Drinks/PostDrinks", defaultDrinks);
+          await axios.post(
+            "https://localhost:7280/Drinks/PostDrinks",
+            defaultDrinks
+          );
           const response = await axios.get(
             "https://localhost:7280/Drinks/GetDrinks"
           );
@@ -42,10 +51,10 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrink
         console.error(error);
       }
     };
-  
+
     // Chamar a função para obter os dados do moedeiro ao montar o componente
     fetchDrinks();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -63,7 +72,7 @@ const Machine = ({ setSelectedDrink, selectedDrink, totalCoins, drinks, setDrink
         document.getElementById(d.name).removeAttribute("data-selected");
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDrink]);
 
   if (isLoading) {

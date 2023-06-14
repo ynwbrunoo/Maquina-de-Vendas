@@ -489,7 +489,7 @@ const Analytics = () => {
               </div>
               <div className="atividade">
                 {storedDadosAnoMessages.length > 0 && storedDadosMesMessages.length > 0 && storedDadosDiaMessages.length > 0 ? (
-                  <div className="filtrar">
+                  <div className="filtrar2">
                     <div className="filtrar">
                   <h2>Filtrar</h2>
                   <select
