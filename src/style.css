@@ -107,10 +107,8 @@ td {
 }
 
 .edit button {
-  background-color: transparent;
   border: none;
   cursor: pointer;
-  border-radius: 50%;
 }
 
 .edit button img:hover {
@@ -282,6 +280,24 @@ td {
 
 .p {
   font-size: 16px;
+}
+
+.edit {
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+.save {
+  background-color: #070707;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  padding: 10px 30px 10px 30px;
+  transition: .2s;
+}
+
+.save:hover {
+  background-color: #222222;
 }
 
 .image {

@@ -212,9 +212,9 @@ const Drink = ({ drink, onClick, totalCoins }) => {
       </div>
       <div className="edit">
         {isEditing ? (
-          <button onClick={handleSaveClick}>Salvar</button>
+          <button className="save" onClick={handleSaveClick}>Salvar</button>
         ) : (
-          <button onClick={handleEditClick}>
+          <button className="edit" onClick={handleEditClick}>
             <img
               src="https://cdn-icons-png.flaticon.com/128/1038/1038547.png"
               alt="Editar"
