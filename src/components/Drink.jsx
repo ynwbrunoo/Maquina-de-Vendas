@@ -202,7 +202,13 @@ const Drink = ({ drink, onClick, totalCoins }) => {
         className={`bebida ${isEditing ? "edit-mode" : ""}`}
         id={drink.name}
         onClick={() => handleOnClick(drink)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleOnClick(drink);
+          }
+        }}
         role="button"
+        tabIndex={0}
       >
         <div className="name">
           <h2>
