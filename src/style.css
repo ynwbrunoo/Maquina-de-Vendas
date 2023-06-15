@@ -252,6 +252,10 @@ td {
 .bebida {
   width: 200px;
   height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   margin-bottom: 10px;
   padding-bottom: 10px;
   transition: 0.4s;
@@ -264,8 +268,8 @@ td {
   background-color: transparent;
   text-align: center;
   border: none;
-  width: 100%;
   outline: none;
+  width: 200px;
 }
 
 .h2 {
