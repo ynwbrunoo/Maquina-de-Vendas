@@ -287,17 +287,28 @@ td {
   border-radius: 50%;
 }
 
-.save {
+.editButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.save, .cancel {
   background-color: #070707;
   border-radius: 5px;
   font-weight: bold;
   font-size: 17px;
-  padding: 10px 30px 10px 30px;
+  width: 90px;
+  height: 50px;
   transition: .2s;
 }
 
 .save:hover {
-  background-color: #222222;
+  background-color: #298d15;
+}
+
+.cancel:hover {
+  background-color: #aa0c0c;
 }
 
 .image {
@@ -310,6 +321,62 @@ td {
 .image img {
   max-width: 80%;
   max-height: 80%;
+  object-fit: contain;
+}
+
+.image button {
+  border: none;
+  background-color: transparent;
+  width: 60px;
+  cursor: pointer;
+}
+
+.editImg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.editImg input {
+  background-color: #222222;
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+}
+
+.editImg button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.editImg #saveImg {
+  background-color: #080808;
+}
+
+.editImg #cancelImg {
+  background-color: #1a1a1a;
+}
+
+.editImg #saveImg:hover {
+  background-color: #298d15;
+}
+
+.editImg #cancelImg:hover {
+  background-color: #aa0c0c;
+}
+
+.image button img {
+  max-width: 80%;
+  max-height: 80%;
+  min-width: 80%;
   object-fit: contain;
 }
 

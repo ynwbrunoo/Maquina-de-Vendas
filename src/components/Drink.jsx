@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useState } from "react";
+import Modal from "./Modal";
 
 const Drink = ({ drink, onClick, totalCoins }) => {
   const [drinks, setDrinks] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
@@ -104,37 +106,93 @@ const Drink = ({ drink, onClick, totalCoins }) => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = async () => {
+  const handleCancelClick = () => {
     setIsEditing(false);
-    try {
-      const name = document.getElementById("editName").value;
-      const price = parseFloat(document.getElementById("editPrice").value);
-      const quant = parseInt(document.getElementById("editQuant").value);
-      const id = drink.id;
+  };
 
-      // Enviar a solicitação de atualização para a API
-      await axios.post(`https://localhost:7280/Drinks/PostDrinks/${id}`, {
-        ...drink,
-        name: name,
-        price: price,
-        quant: quant,
-      });
+  const handleSaveClick = async () => {
+    if (document.getElementById("editName").value !== "") {
+      if (document.getElementById("editPrice").value !== "") {
+        if (document.getElementById("editQuant").value !== "") {
+          setIsEditing(false);
+          try {
+            const name = document.getElementById("editName").value;
+            const price = parseFloat(
+              document.getElementById("editPrice").value
+            );
+            const quant = parseInt(document.getElementById("editQuant").value);
+            const id = drink.id;
 
-      const fetchDrinks = async () => {
-        try {
-          const response = await axios.get(
-            "https://localhost:7280/Drinks/GetDrinks"
-          );
-          setDrinks(response.data);
-        } catch (error) {
-          console.error(error);
+            // Enviar a solicitação de atualização para a API
+            await axios.post(`https://localhost:7280/Drinks/PostDrinks/${id}`, {
+              ...drink,
+              name: name,
+              price: price,
+              quant: quant,
+            });
+
+            const fetchDrinks = async () => {
+              try {
+                const response = await axios.get(
+                  "https://localhost:7280/Drinks/GetDrinks"
+                );
+                setDrinks(response.data);
+              } catch (error) {
+                console.error(error);
+              }
+            };
+
+            fetchDrinks();
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          toast.error(`A Quantidade não pode ser vazio!`, {
+            autoClose: 3500,
+          });
         }
-      };
+      } else {
+        toast.error(`O Preço não pode ser vazio!`, {
+          autoClose: 3500,
+        });
+      }
+    } else {
+      toast.error(`O Nome não pode ser vazio!`, {
+        autoClose: 3500,
+      });
+    }
+  };
 
-      fetchDrinks();
-    } catch (error) {
-      console.error(error);
+  const handleSaveClick2 = async () => {
+    if (document.getElementById("editImg").value !== "") {
+      setShowModal(false);
+      try {
+        const img = document.getElementById("editImg").value;
+        const id = drink.id;
 
+        // Enviar a solicitação de atualização para a API
+        await axios.post(`https://localhost:7280/Drinks/PostDrinks/${id}`, {
+          ...drink,
+          image: img,
+        });
+
+        const fetchDrinks = async () => {
+          try {
+            const response = await axios.get(
+              "https://localhost:7280/Drinks/GetDrinks"
+            );
+            setDrinks(response.data);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        fetchDrinks();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      toast.error(`O nome não pode ser vazio!`, { autoClose: 3500 });
     }
   };
 
@@ -154,6 +212,7 @@ const Drink = ({ drink, onClick, totalCoins }) => {
                 id="editName"
                 type="text"
                 defaultValue={drink.name}
+                required
               />
             ) : (
               drink.name
@@ -161,7 +220,35 @@ const Drink = ({ drink, onClick, totalCoins }) => {
           </h2>
         </div>
         <div className="image">
-          <img src={drink.image} alt={drink.name} />
+          <div className="image">
+            {isEditing ? (
+              <button onClick={() => setShowModal(true)}>
+                <img src={drink.image} alt={drink.name} />
+              </button>
+            ) : (
+              <img src={drink.image} alt={drink.name} />
+            )}
+
+            {showModal && (
+              <Modal>
+                <div className="editImg">
+                  <h2>Digite o link da imagem</h2>
+                  <input
+                    type="text"
+                    id="editImg"
+                    defaultValue={drink.image}
+                    required
+                  />
+                  <button id="saveImg" onClick={handleSaveClick2}>
+                    Salvar
+                  </button>
+                  <button id="cancelImg" onClick={() => setShowModal(false)}>
+                    Cancelar
+                  </button>
+                </div>
+              </Modal>
+            )}
+          </div>
         </div>
         <div className="price">
           <h3>
@@ -171,6 +258,7 @@ const Drink = ({ drink, onClick, totalCoins }) => {
                 id="editPrice"
                 type="text"
                 defaultValue={drink.price.toFixed(2)}
+                required
               />
             ) : (
               `${drink.price.toFixed(2)}`
@@ -188,6 +276,7 @@ const Drink = ({ drink, onClick, totalCoins }) => {
                   id="editQuant"
                   type="text"
                   defaultValue={drink.quant}
+                  required
                 />
               ) : (
                 `Esgotado`
@@ -202,6 +291,7 @@ const Drink = ({ drink, onClick, totalCoins }) => {
                   id="editQuant"
                   type="text"
                   defaultValue={drink.quant}
+                  required
                 />
               ) : (
                 `${drink.quant}`
@@ -212,7 +302,14 @@ const Drink = ({ drink, onClick, totalCoins }) => {
       </div>
       <div className="edit">
         {isEditing ? (
-          <button className="save" onClick={handleSaveClick}>Salvar</button>
+          <div className="editButtons">
+            <button className="save" onClick={handleSaveClick}>
+              Salvar
+            </button>
+            <button className="cancel" onClick={handleCancelClick}>
+              Cancelar
+            </button>
+          </div>
         ) : (
           <button className="edit" onClick={handleEditClick}>
             <img
