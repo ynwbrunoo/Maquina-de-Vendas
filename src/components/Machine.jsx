@@ -112,6 +112,8 @@ const Machine = ({
           onClick={handleDrinkClick}
           selectedDrink={selectedDrink}
           totalCoins={totalCoins}
+          drinks={drinks}
+          setDrinks={setDrinks}
         />
       ))}
     </div>

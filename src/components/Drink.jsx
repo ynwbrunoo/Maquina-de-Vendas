@@ -5,8 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import Modal from "./Modal";
 
-const Drink = ({ drink, onClick, totalCoins }) => {
-  const [drinks, setDrinks] = useState([]);
+const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
