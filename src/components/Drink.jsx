@@ -221,6 +221,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
                 id="editName"
                 type="text"
                 defaultValue={drink.name}
+                maxLength={13}
                 required
               />
             ) : (
@@ -267,6 +268,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
                 id="editPrice"
                 type="text"
                 defaultValue={drink.price.toFixed(2)}
+                maxLength={4}
                 required
               />
             ) : (
@@ -285,6 +287,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
                   id="editQuant"
                   type="text"
                   defaultValue={drink.quant}
+                  maxLength={2}
                   required
                 />
               ) : (
@@ -300,6 +303,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
                   id="editQuant"
                   type="text"
                   defaultValue={drink.quant}
+                  maxLength={2}
                   required
                 />
               ) : (
