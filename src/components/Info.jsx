@@ -17,30 +17,32 @@ const Info = ({
   setCoinsBox,
 }) => {
   const retirarQuant = async () => {
-    const updatedDrinks = await Promise.all(drinks.map(async (drink) => {
-      if (selectedDrink && selectedDrink.name === drink.name) {
-        if (selectedDrink.quant !== 0) {
-          if (drink.id === selectedDrink.id) {
-            let id = selectedDrink.id;
-            try {
-              await axios.post(
-                `https://localhost:7280/Drinks/PostDrinks/${id}`,
-                { ...selectedDrink, quant: selectedDrink.quant - 1 }
-              );
-              return { ...drink, quant: selectedDrink.quant - 1 };
-            } catch (error) {
-              console.error(error);
-              return drink;
+    const updatedDrinks = await Promise.all(
+      drinks.map(async (drink) => {
+        if (selectedDrink && selectedDrink.name === drink.name) {
+          if (selectedDrink.quant !== 0) {
+            if (drink.id === selectedDrink.id) {
+              let id = selectedDrink.id;
+              try {
+                await axios.post(
+                  `https://localhost:7280/Drinks/PostDrinks/${id}`,
+                  { ...selectedDrink, quant: selectedDrink.quant - 1 }
+                );
+                return { ...drink, quant: selectedDrink.quant - 1 };
+              } catch (error) {
+                console.error(error);
+                return drink;
+              }
             }
           }
         }
-      }
-      return drink;
-    }));
-  
+        return drink;
+      })
+    );
+
     setDrinks(updatedDrinks);
   };
-  
+
   useEffect(() => {
     // Função assíncrona para obter os dados do moedeiro da API
     const fetchDrinks = async () => {
@@ -114,26 +116,32 @@ const Info = ({
   }, []);
 
   const addTroco = async () => {
-    const updatedCoinsBox = await Promise.all(coinsBox.map( async (coin) => {
-      if ((total / 100 - selectedDrink.price).toFixed(2) >= coin.moeda / 100) {
-        const updatedQuantidade = coin.quantidade - 1;
-        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
-        const id = coin.id;
-        total = total - coin.moeda;
+    const updatedCoinsBox = await Promise.all(
+      coinsBox.map(async (coin) => {
+        if (
+          (total / 100 - selectedDrink.price).toFixed(2) >=
+          coin.moeda / 100
+        ) {
+          const updatedQuantidade = coin.quantidade - 1;
+          const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
+          const id = coin.id;
+          total = total - coin.moeda;
 
-        await axios.post(
-          `https://localhost:7280/Coins/PostCoinsBox/${id}`,
-          { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal }
-        );
+          await axios.post(`https://localhost:7280/Coins/PostCoinsBox/${id}`, {
+            ...coin,
+            quantidade: updatedQuantidade,
+            valorTotal: updatedValorTotal,
+          });
 
-        return {
-          ...coin,
-          quantidade: updatedQuantidade,
-          valorTotal: updatedValorTotal,
-        };
-      }
-      return coin;
-    }));
+          return {
+            ...coin,
+            quantidade: updatedQuantidade,
+            valorTotal: updatedValorTotal,
+          };
+        }
+        return coin;
+      })
+    );
 
     try {
       setCoinsBox(updatedCoinsBox);
@@ -142,26 +150,29 @@ const Info = ({
     }
 
     try {
-      const updatedCoinsBoxList = await Promise.all(updatedCoinsBox.map( async (coin) => {
-        const foundCoin = coinList.find((c) => c === coin.moeda);
+      const updatedCoinsBoxList = await Promise.all(
+        updatedCoinsBox.map(async (coin) => {
+          const foundCoin = coinList.find((c) => c === coin.moeda);
 
-        const updatedQuantidade = foundCoin
-          ? coin.quantidade + 1
-          : coin.quantidade;
-        const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
-        const id = coin.id;
+          const updatedQuantidade = foundCoin
+            ? coin.quantidade + 1
+            : coin.quantidade;
+          const updatedValorTotal = (coin.moeda * updatedQuantidade) / 100;
+          const id = coin.id;
 
-        await axios.post(
-          `https://localhost:7280/Coins/PostCoinsBox/${id}`,
-          { ...coin, quantidade: updatedQuantidade, valorTotal: updatedValorTotal }
-        );
+          await axios.post(`https://localhost:7280/Coins/PostCoinsBox/${id}`, {
+            ...coin,
+            quantidade: updatedQuantidade,
+            valorTotal: updatedValorTotal,
+          });
 
-        return {
-          ...coin,
-          quantidade: updatedQuantidade,
-          valorTotal: updatedValorTotal,
-        };
-      }));
+          return {
+            ...coin,
+            quantidade: updatedQuantidade,
+            valorTotal: updatedValorTotal,
+          };
+        })
+      );
       setCoinsBox(updatedCoinsBoxList);
       setCoinList(new Array(coinList.length).fill(0));
     } catch (error) {
@@ -183,49 +194,51 @@ const Info = ({
 
     if (dadosDiaMessages.length > 0) {
       bool = false;
-      await Promise.all(dadosDiaMessages.forEach(async (dadoDia) => {
-        if (
-          dadoDia.hour === hour &&
-          dadoDia.day === now.getDate() &&
-          dadoDia.month === now.getMonth() + 1 &&
-          dadoDia.year === now.getFullYear()
-        ) {
-          dadoDia.price = Number(dadoDia.price);
-          dadoDia.price += selectedDrink.price;
-          dadoDia.price = dadoDia.price.toFixed(2);
+      await Promise.all(
+        dadosDiaMessages.forEach(async (dadoDia) => {
+          if (
+            dadoDia.hour === hour &&
+            dadoDia.day === now.getDate() &&
+            dadoDia.month === now.getMonth() + 1 &&
+            dadoDia.year === now.getFullYear()
+          ) {
+            dadoDia.price = Number(dadoDia.price);
+            dadoDia.price += selectedDrink.price;
+            dadoDia.price = dadoDia.price.toFixed(2);
 
-          await axios.post(
-            `https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages/${dadoDia.id}`,
-            {
-              ...dadoDia,
-              hour: dadoDia.hour,
-              day: dadoDia.day,
-              price: dadoDia.price,
-              month: dadoDia.month,
-              year: dadoDia.year,
-            }
-          );
+            await axios.post(
+              `https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages/${dadoDia.id}`,
+              {
+                ...dadoDia,
+                hour: dadoDia.hour,
+                day: dadoDia.day,
+                price: dadoDia.price,
+                month: dadoDia.month,
+                year: dadoDia.year,
+              }
+            );
 
-          const response4 = await axios.get(
-            "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
-          );
-          setDadosDiaMessages(response4.data);
+            const response4 = await axios.get(
+              "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+            );
+            setDadosDiaMessages(response4.data);
 
-          bool = true;
-        }
-        if (bool === false) {
-          await axios.post(
-            "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
-            [{ hour: hour, day: day, price: price, month: month, year: year }]
-          );
+            bool = true;
+          }
+          if (bool === false) {
+            await axios.post(
+              "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
+              [{ hour: hour, day: day, price: price, month: month, year: year }]
+            );
 
-          const response4 = await axios.get(
-            "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
-          );
-          setDadosDiaMessages(response4.data);
-          bool = true;
-        }
-      }));
+            const response4 = await axios.get(
+              "https://localhost:7280/DadosDiaMessages/GetDadosDiaMessages"
+            );
+            setDadosDiaMessages(response4.data);
+            bool = true;
+          }
+        })
+      );
     } else {
       await axios.post(
         "https://localhost:7280/DadosDiaMessages/PostDadosDiaMessages",
@@ -248,47 +261,49 @@ const Info = ({
 
     if (dadosMesMessages.length > 0) {
       bool = false;
-      await Promise.all(dadosMesMessages.forEach(async (dadoMes) => {
-        if (
-          dadoMes.day === now.getDate() &&
-          dadoMes.month === now.getMonth() + 1 &&
-          dadoMes.year === now.getFullYear()
-        ) {
-          dadoMes.price = Number(dadoMes.price);
-          dadoMes.price += selectedDrink.price;
-          dadoMes.price = dadoMes.price.toFixed(2);
+      await Promise.all(
+        dadosMesMessages.forEach(async (dadoMes) => {
+          if (
+            dadoMes.day === now.getDate() &&
+            dadoMes.month === now.getMonth() + 1 &&
+            dadoMes.year === now.getFullYear()
+          ) {
+            dadoMes.price = Number(dadoMes.price);
+            dadoMes.price += selectedDrink.price;
+            dadoMes.price = dadoMes.price.toFixed(2);
 
-          await axios.post(
-            `https://localhost:7280/DadosMesMessages/PostDadosMesMessages/${dadoMes.id}`,
-            {
-              ...dadoMes,
-              day: dadoMes.day,
-              price: dadoMes.price,
-              month: dadoMes.month,
-              year: dadoMes.year,
-            }
-          );
+            await axios.post(
+              `https://localhost:7280/DadosMesMessages/PostDadosMesMessages/${dadoMes.id}`,
+              {
+                ...dadoMes,
+                day: dadoMes.day,
+                price: dadoMes.price,
+                month: dadoMes.month,
+                year: dadoMes.year,
+              }
+            );
 
-          const response3 = await axios.get(
-            "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
-          );
-          setDadosMesMessages(response3.data);
+            const response3 = await axios.get(
+              "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+            );
+            setDadosMesMessages(response3.data);
 
-          bool = true;
-        }
-        if (bool === false) {
-          await axios.post(
-            "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
-            [{ day: day, price: price, month: month, year: year }]
-          );
+            bool = true;
+          }
+          if (bool === false) {
+            await axios.post(
+              "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
+              [{ day: day, price: price, month: month, year: year }]
+            );
 
-          const response3 = await axios.get(
-            "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
-          );
-          setDadosMesMessages(response3.data);
-          bool = true;
-        }
-      }));
+            const response3 = await axios.get(
+              "https://localhost:7280/DadosMesMessages/GetDadosMesMessages"
+            );
+            setDadosMesMessages(response3.data);
+            bool = true;
+          }
+        })
+      );
     } else {
       await axios.post(
         "https://localhost:7280/DadosMesMessages/PostDadosMesMessages",
@@ -300,7 +315,7 @@ const Info = ({
       );
       setDadosMesMessages(response3.data);
     }
-  }
+  };
 
   const analyticsAno = async (price) => {
     const now = new Date();
@@ -310,40 +325,47 @@ const Info = ({
 
     if (dadosAnoMessages.length > 0) {
       bool = false;
-      await Promise.all(dadosAnoMessages.forEach(async (dadoAno) => {
-        if (
-          dadoAno.month === now.getMonth() + 1 &&
-          dadoAno.year === now.getFullYear()
-        ) {
-          dadoAno.price = Number(dadoAno.price);
-          dadoAno.price += selectedDrink.price;
-          dadoAno.price = dadoAno.price.toFixed(2);
+      await Promise.all(
+        dadosAnoMessages.forEach(async (dadoAno) => {
+          if (
+            dadoAno.month === now.getMonth() + 1 &&
+            dadoAno.year === now.getFullYear()
+          ) {
+            dadoAno.price = Number(dadoAno.price);
+            dadoAno.price += selectedDrink.price;
+            dadoAno.price = dadoAno.price.toFixed(2);
 
-          await axios.post(
-            `https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages/${dadoAno.id}`,
-            { ...dadoAno, price: dadoAno.price, month: dadoAno.month, year: dadoAno.year }
-          );
+            await axios.post(
+              `https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages/${dadoAno.id}`,
+              {
+                ...dadoAno,
+                price: dadoAno.price,
+                month: dadoAno.month,
+                year: dadoAno.year,
+              }
+            );
 
-          const response2 = await axios.get(
-            "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
-          );
-          setDadosAnoMessages(response2.data);
+            const response2 = await axios.get(
+              "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+            );
+            setDadosAnoMessages(response2.data);
 
-          bool = true;
-        }
-        if (bool === false) {
-          await axios.post(
-            "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
-            [{ price: price, month: month, year: year }]
-          );
+            bool = true;
+          }
+          if (bool === false) {
+            await axios.post(
+              "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
+              [{ price: price, month: month, year: year }]
+            );
 
-          const response2 = await axios.get(
-            "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
-          );
-          setDadosAnoMessages(response2.data);
-          bool = true;
-        }
-      }));
+            const response2 = await axios.get(
+              "https://localhost:7280/DadosAnoMessages/GetDadosAnoMessages"
+            );
+            setDadosAnoMessages(response2.data);
+            bool = true;
+          }
+        })
+      );
     } else {
       await axios.post(
         "https://localhost:7280/DadosAnoMessages/PostDadosAnoMessages",
@@ -355,7 +377,7 @@ const Info = ({
       );
       setDadosAnoMessages(response2.data);
     }
-  }
+  };
 
   const getCurrentTime = () => {
     const date = new Date();

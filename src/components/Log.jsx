@@ -24,45 +24,45 @@ const Log = () => {
       console.error(error);
     }
   };
-  
-    return (
-      <div className="history">
-        <div className="log">
-          <button
-            onClick={() => {
-              setShowModal(true), fetchLogMessages();
-            }}
-          >
-            <img
-              src="https://www.seekpng.com/png/full/781-7815113_history-icon-white-png.png"
-              alt="Histórico"
-            />{" "}
-            Histórico
-          </button>
-          {showModal ? (
-            <Modal>
-              <div className="buttons">
-                <button onClick={() => setShowModal(false)}>Fechar</button>
-              </div>
-              <div className="historico">
-                <h2>Histórico:</h2>
-                {logMessages !== null && logMessages.length > 0 ? (
-                  <div className="lista">
-                    <ul>
-                      {logMessages.reverse().map((message) => (
-                        <li key={message.id}>{message.message}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : (
-                  <h2>NENHUM RESULTADO</h2>
-                )}
+
+  return (
+    <div className="history">
+      <div className="log">
+        <button
+          onClick={() => {
+            setShowModal(true), fetchLogMessages();
+          }}
+        >
+          <img
+            src="https://www.seekpng.com/png/full/781-7815113_history-icon-white-png.png"
+            alt="Histórico"
+          />{" "}
+          Histórico
+        </button>
+        {showModal ? (
+          <Modal>
+            <div className="buttons">
+              <button onClick={() => setShowModal(false)}>Fechar</button>
+            </div>
+            <div className="historico">
+              <h2>Histórico:</h2>
+              {logMessages !== null && logMessages.length > 0 ? (
+                <div className="lista">
+                  <ul>
+                    {logMessages.reverse().map((message) => (
+                      <li key={message.id}>{message.message}</li>
+                    ))}
+                  </ul>
                 </div>
-            </Modal>
-          ) : null}
-        </div>
+              ) : (
+                <h2>NENHUM RESULTADO</h2>
+              )}
+            </div>
+          </Modal>
+        ) : null}
       </div>
-    );
-  }
+    </div>
+  );
+};
 
 export default Log;
