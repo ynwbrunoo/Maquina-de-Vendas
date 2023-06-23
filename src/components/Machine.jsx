@@ -62,11 +62,14 @@ const Machine = ({
       drinks.forEach((d) => {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
+          document.getElementById(d.name).style.opacity = "30%";
         } else {
           if (d.quant === 0) {
             document.getElementById(d.name).style.backgroundColor = "#757575";
+            document.getElementById(d.name).style.opacity = "30%";
           } else {
             document.getElementById(d.name).style.backgroundColor = "#222222";
+            document.getElementById(d.name).style.opacity = "100%";
           }
         }
         document.getElementById(d.name).removeAttribute("data-selected");
@@ -94,8 +97,10 @@ const Machine = ({
       drinks.forEach((d) => {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
+          document.getElementById(d.name).style.opacity = "30%";
         } else {
           document.getElementById(d.name).style.backgroundColor = "#222222";
+          document.getElementById(d.name).style.opacity = "100%";
         }
         document.getElementById(d.name).removeAttribute("data-selected");
       });

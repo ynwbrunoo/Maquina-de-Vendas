@@ -30,13 +30,16 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
       if (totalCoins / 100 >= d.price) {
         if (d.quant === 0) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
+          document.getElementById(d.name).style.opacity = "30%";
           document.getElementById(d.name).style.cursor = "not-allowed";
         } else {
           document.getElementById(d.name).style.backgroundColor = "#222222";
+          document.getElementById(d.name).style.opacity = "100%";
           document.getElementById(d.name).style.cursor = "pointer";
         }
       } else {
         document.getElementById(d.name).style.backgroundColor = "#757575";
+        document.getElementById(d.name).style.opacity = "30%";
         document.getElementById(d.name).style.cursor = "not-allowed";
       }
     });
@@ -57,6 +60,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
         { autoClose: 2000 }
       );
       document.getElementById(drink.name).style.backgroundColor = "#757575";
+      document.getElementById(drink.name).style.opacity = "30%";
       document.getElementById(drink.name).removeAttribute("data-selected");
       return;
     }
@@ -67,6 +71,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
         { autoClose: 2000 }
       );
       document.getElementById(drink.name).style.backgroundColor = "#757575";
+      document.getElementById(drink.name).style.opacity = "30%";
       document.getElementById(drink.name).removeAttribute("data-selected");
       return;
     }
@@ -77,19 +82,24 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
 
     if (totalCoins / 100 < drink.price) {
       document.getElementById(drink.name).style.backgroundColor = "#757575";
+      document.getElementById(drink.name).style.opacity = "30%";
     } else {
       document.getElementById(drink.name).style.backgroundColor = "#000000";
+      document.getElementById(drink.name).style.opacity = "100%";
     }
 
     drinks.forEach((d) => {
       if (d.name !== drink.name) {
         if (totalCoins / 100 < d.price) {
           document.getElementById(d.name).style.backgroundColor = "#757575";
+          document.getElementById(d.name).style.opacity = "30%";
         } else {
           if (d.quant === 0) {
             document.getElementById(d.name).style.backgroundColor = "#757575";
+            document.getElementById(d.name).style.opacity = "30%";
           } else {
             document.getElementById(d.name).style.backgroundColor = "#222222";
+            document.getElementById(d.name).style.opacity = "100%";
           }
         }
         document.getElementById(d.name).removeAttribute("data-selected");
