@@ -114,7 +114,7 @@ const Drink = ({ drink, onClick, totalCoins, drinks, setDrinks }) => {
   const handleEditClick = () => {
     setIsEditing(true);
   };
-
+  
   const handleCancelClick = () => {
     setIsEditing(false);
   };

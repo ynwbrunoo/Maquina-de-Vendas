@@ -377,6 +377,11 @@ td {
   background-color: #aa0c0c;
 }
 
+.edit-mode {
+  opacity: 1 !important;
+}
+
+
 #editPrice {
   width: 40px;
 }
