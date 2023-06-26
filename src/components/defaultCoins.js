@@ -11,8 +11,8 @@ let defaultCoins = [
   },
   {
     moeda: 50,
-    quantidade: 30,
-    valorTotal: 15,
+    quantidade: 0,
+    valorTotal: 0,
   },
   {
     moeda: 20,
