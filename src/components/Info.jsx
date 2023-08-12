@@ -15,6 +15,7 @@ const Info = ({
   setDrinks,
   coinsBox,
   setCoinsBox,
+  setTakeDrink
 }) => {
   const retirarQuant = async () => {
     const updatedDrinks = await Promise.all(
@@ -40,6 +41,9 @@ const Info = ({
       })
     );
 
+      const newDrink = { image: selectedDrink.image };
+  
+      setTakeDrink(prevState => [...prevState, newDrink]);
     setDrinks(updatedDrinks);
   };
 

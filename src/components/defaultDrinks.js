@@ -4,7 +4,7 @@ const drinks = [
     price: 1.2,
     quant: 10,
     image:
-      "https://www.pngarts.com/files/4/Coca-Cola-Can-Transparent-Image.png",
+      "https://freepngimg.com/thumb/coke/8-2-coca-cola-png-picture.png",
   },
   {
     name: "Sprite",
