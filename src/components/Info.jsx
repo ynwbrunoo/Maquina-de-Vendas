@@ -41,9 +41,9 @@ const Info = ({
       })
     );
 
-      const newDrink = { image: selectedDrink.image };
+    const newDrink = { name: selectedDrink.name, image: selectedDrink.image };
   
-      setTakeDrink(prevState => [...prevState, newDrink]);
+    setTakeDrink(prevState => [...prevState, newDrink]);
     setDrinks(updatedDrinks);
   };
 

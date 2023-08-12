@@ -15,23 +15,28 @@ const TakeDrink = ({takeDrink, setTakeDrink}) => {
         return `${date.toLocaleDateString("pt-PT", options)}`;
       };
 
-    const handleRetirar = () => {
-        setTakeDrink(null);
+      const handleRetirar = (drink, image) => {
+        // Filtra o array de bebidas, removendo a bebida com a imagem que foi clicada
+        const updatedDrinks = takeDrink.filter((drink) => drink.image != image);
+      
+        // Atualiza o estado para refletir o array de bebidas atualizado
+        setTakeDrink(updatedDrinks);
+      
         logAndStore(
-            `Retirou a bebida X - ${getCurrentTime()}`
-          );
-          toast.success(`Retirou a bebida X, Obrigado Volte Sempre!`, {
-            autoClose: 3000,
-          });
-    }
+          `Retirou a ${drink.name} - ${getCurrentTime()}`
+        );
+        toast.success(`Retirou a ${drink.name}, Obrigado Volte Sempre!`, {
+          autoClose: 3000,
+        });
+      }
 
     return (
         <div className='TakeDrink'>
           {takeDrink.map((drink) => (
             drink.image != null ? (
               <img
-                key={drink.image} // Use um valor adequado como chave, preferencialmente um ID exclusivo
-                onClick={() => handleRetirar(drink.image)} // Supondo que handleRetirar espera um URL de imagem
+                key={drink.image}
+                onClick={() => handleRetirar(drink.image)}
                 className="retirarBebida"
                 src={drink.image}
                 alt="Retirar Bebida"
