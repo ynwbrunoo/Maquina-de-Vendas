@@ -1,6 +1,8 @@
 # Vending Machine
 A Project that is a vending machine on a website! Powered by React.js
 
+You will need <a href="https://github.com/ynwbrunoo/MaquinaApi">máquina API</a> so you can run the vending machine properly.
+
 ### Screenshots
 
 <p align="center">
